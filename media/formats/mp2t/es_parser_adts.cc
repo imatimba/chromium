@@ -7,6 +7,7 @@
 #include <stddef.h>
 
 #include <vector>
+#include <algorithm>
 
 #include "base/logging.h"
 #include "base/strings/string_number_conversions.h"
