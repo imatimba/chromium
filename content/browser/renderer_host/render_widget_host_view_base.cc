@@ -33,7 +33,8 @@ const int kFlushInputRateInUs = 16666;
 
 RenderWidgetHostViewBase::RenderWidgetHostViewBase()
     : popup_type_(blink::WebPopupTypeNone),
-      background_color_(SK_ColorWHITE),
+    // Change default background color on navigation (current or new tab) to ffdevGray using SkColorSetRGB
+      background_color_(SkColorSetRGB(39, 43, 53)),
       mouse_locked_(false),
       showing_context_menu_(false),
 #if !defined(USE_AURA)
