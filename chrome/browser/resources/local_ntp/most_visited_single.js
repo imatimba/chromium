@@ -191,7 +191,8 @@ var updateTheme = function(info) {
   }
   if (info.isThemeDark) {
     themeStyle.push('.thumb-ntp .mv-tile, .thumb-ntp .mv-empty-tile { ' +
-        'background: rgb(51,51,51); }');
+    // Change the background of the squares containing most visited sites
+        'background: rgb(57,63,76); }');
     themeStyle.push('.thumb-ntp .mv-thumb.failed-img { ' +
         'background-color: #555; }');
     themeStyle.push('.thumb-ntp .mv-thumb.failed-img::after { ' +

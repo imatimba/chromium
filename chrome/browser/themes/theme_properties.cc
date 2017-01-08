@@ -98,15 +98,16 @@ const SkColor kDefaultColorBookmarkInstructionsTextIncognito[] = {
     SK_ColorBLACK, SkColorSetARGB(0x8A, 0xFF, 0xFF, 0xFF)};
 
 #if defined(OS_WIN)
-const SkColor kDefaultColorNTPBackground =
-    color_utils::GetSysSkColor(COLOR_WINDOW);
-const SkColor kDefaultColorNTPText =
-    color_utils::GetSysSkColor(COLOR_WINDOWTEXT);
+// Set NTP background and text color instead of using Windows color (bright white if you don't use a custom uxstyle)
+// Also, I think it fixes some cases of micro white flashes
+const SkColor kDefaultColorNTPBackground = SkColorSetRGB(39, 43, 53);
+const SkColor kDefaultColorNTPText = SkColorSetRGB(214, 214, 214);
 const SkColor kDefaultColorNTPLink = color_utils::GetSysSkColor(COLOR_HOTLIGHT);
 #else
 // TODO(beng): source from theme provider.
-constexpr SkColor kDefaultColorNTPBackground = SK_ColorWHITE;
-constexpr SkColor kDefaultColorNTPText = SK_ColorBLACK;
+// Same but for Linux and Mac
+constexpr SkColor kDefaultColorNTPBackground = SkColorSetRGB(39, 43, 53);
+constexpr SkColor kDefaultColorNTPText = SkColorSetRGB(214, 214, 214);
 const SkColor kDefaultColorNTPLink = SkColorSetRGB(0x06, 0x37, 0x74);
 #endif  // OS_WIN
 
