@@ -145,6 +145,8 @@ class PLATFORM_EXPORT Color {
   static const RGBA32 gray = 0xFFA0A0A0;
   static const RGBA32 lightGray = 0xFFC0C0C0;
   static const RGBA32 transparent = 0x00000000;
+  // Add new background color to use it on WebKit
+  static const RGBA32 ffdevGray = 0xFF272b35;
 
  private:
   RGBA32 m_color;
