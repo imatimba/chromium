@@ -54,13 +54,15 @@ h2 {
 }
 
 h3 {
-  color: black;
+  /*Change titles color, Ex. "Sign in"*/
+  color: rgb(214, 214, 214);
   font-size: 1.2em;
   margin-bottom: 0.8em;
 }
 
 a {
-  color: rgb(17, 85, 204);
+  /*Change link text color to a lighter blue*/
+  color: rgb(120, 170, 255);
   text-decoration: underline;
 }
 

@@ -187,7 +187,8 @@ list > .spacer {
 }
 
 list:not([disabled]) > :hover {
-  background-color: rgb(228, 236, 247);
+  /*Change the unselected user color*/
+  background-color: rgb(57, 63, 76);
 }
 
 /* Note: If this becomes the list style for other WebUI pages these rules can be
@@ -195,7 +196,8 @@ list:not([disabled]) > :hover {
 
 list:not([has-element-focus]) > [selected],
 list:not([has-element-focus]) > [lead][selected] {
-  background-color: #d0d0d0;
+  /*Change background color for lists, changed for user list on settings*/
+  background-color: rgb(57, 63, 76);
   background-image: none;
 }
 
@@ -203,7 +205,8 @@ list[has-element-focus] > [selected],
 list[has-element-focus] > [lead][selected],
 list:not([has-element-focus]) > [selected]:hover,
 list:not([has-element-focus]) > [selected][lead]:hover {
-  background-color: rgb(187, 206, 233);
+  /*Change the selected user background color*/
+  background-color: rgb(78, 87, 100);
   background-image: none;
 }
 

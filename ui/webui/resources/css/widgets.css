@@ -275,7 +275,8 @@ input:disabled:-webkit-any([type='password'],
 }
 
 :-webkit-any(.checkbox, .radio) label:hover {
-  color: black;
+  /*Change the color of text when you hover, Ex. "Show Home Button"*/
+  color: rgb(120, 170, 255);
 }
 
 label > input:disabled:-webkit-any([type='checkbox'], [type='radio']) ~ span {

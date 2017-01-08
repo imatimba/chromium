@@ -10,7 +10,8 @@
   /* TODO(dbeam): remove perspective when http://crbug.com/374970 is fixed. */
   -webkit-perspective: 1px;
   -webkit-transition: 200ms opacity;
-  background-color: rgba(255, 255, 255, 0.75);
+  /*Change color of the background overlay that appears when a popup opens*/
+  background-color: rgba(39, 43, 53, 0.75);
   bottom: 0;
   display: -webkit-box;
   left: 0;

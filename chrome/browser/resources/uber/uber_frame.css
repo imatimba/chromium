@@ -17,7 +17,8 @@ html.changing-content body {
 
 h1 {
   -webkit-margin-start: 23px;
-  color: rgb(92, 97, 102);
+  /*Change font color on top left, Ex. "Chromium"*/
+  color: rgb(214, 214, 214);
   margin-bottom: 1em;
   /* This value must match the top padding of the uber page header. */
   margin-top: 21px;
@@ -51,9 +52,10 @@ li:not([hidden]) ~ li:not([hidden]) ~ #help {
 }
 
 button {
-  background-color: white;
+  /*Change background and font color on left menu*/
+  background-color: rgb(39, 43, 53);
   border: 0;
-  color: #999;
+  color: rgb(214, 214, 214);
   cursor: pointer;
   font: inherit;
   line-height: 1.417em;  /* 17px based on default 12px font size. */
@@ -62,7 +64,8 @@ button {
 }
 
 .selected > button {
-  color: rgb(70, 78, 90);
+  /*Change font color of selected menu on the left, Ex. Settings-Extensions-About*/
+  color: rgb(120, 170, 255);
 }
 
 html[guestMode='true'] .hide-in-guest {

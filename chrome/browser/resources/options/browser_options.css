@@ -150,7 +150,8 @@ input[type='range'] {
 }
 
 .extension-controlled-warning-box {
-  background-color: #fbfbfb;
+  /*Change extension controlled warning background, the box that alerts you when you have a VPN extension installed*/
+  background-color: #272B35;
   border: 1px solid #cecece;
   border-radius: 3px;
   padding: 19px;

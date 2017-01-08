@@ -181,7 +181,8 @@ html[dir='rtl'] .extension-list-item {
 .extension-title {
   -webkit-padding-end: 20px;
   -webkit-user-select: text;
-  color: rgb(48, 57, 66);
+  /*Change extension title color*/
+  color: rgb(214, 214, 214);
   display: inline;
   font-size: 14px;
   font-weight: 500;
@@ -306,7 +307,8 @@ html[dir='rtl'] .extension-list-item {
 }
 
 .butter-bar {
-  background: rgb(255, 242, 153);
+  /*Change warning background color when you tick "Allow in incognito"*/
+  background: rgb(57, 63, 76);
 }
 
 .install-warnings,
