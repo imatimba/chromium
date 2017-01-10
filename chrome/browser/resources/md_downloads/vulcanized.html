@@ -1055,7 +1055,8 @@ paper-button {
 }
 
 #date {
-  color: rgb(104, 113, 116);
+  /*Change date text color*/
+  color: rgb(214, 214, 214);
         font-size: 100%;
         font-weight: 500;
         margin: 24px auto 10px;
@@ -1067,7 +1068,8 @@ paper-button {
 }
 
 #content {
-  background: white;
+  /*Change active content background*/
+  background: #4E5764;
         border-radius: 2px;
         display: flex;
         flex: none;
@@ -1082,14 +1084,13 @@ paper-button {
 }
 
 #content:not(.is-active) {
-  background: rgba(255, 255, 255, .6);
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .03),
-                    0 1px 4px 0 rgba(0, 0, 0, .048),
-                    0 3px 1px -2px rgba(0, 0, 0, .12);
+  /*Change non-active content background*/
+  background: #4E5764;
 }
 
 #details {
-  -webkit-border-start: 1px #d8d8d8 solid;
+  /*Change separator color*/
+  -webkit-border-start: 1px #4E5764 solid;
         -webkit-padding-end: 16px;
         -webkit-padding-start: var(--downloads-card-margin);
         display: flex;
@@ -1157,11 +1158,13 @@ paper-button {
 }
 
 #pause-or-resume, .is-active :-webkit-any(#name, #file-link, #show) {
-  color: rgb(51, 103, 214);
+  /*Change linked text color*/
+  color: rgb(120, 170, 255);
 }
 
 #tag {
-  color: #5a5a5a;
+  /*Change "Cancelled" color*/
+  color: #d6d6d6;
         font-weight: 500;
 }
 
@@ -1184,7 +1187,8 @@ paper-button {
 }
 
 .is-active #description {
-  color: #616161;
+  /*Change download speed, eta, etc text color*/
+  color: #d6d6d6;
 }
 
 .dangerous #description {
@@ -1202,7 +1206,8 @@ paper-button {
 }
 
 #cancel, #retry, .keep, .discard {
-  color: #5a5a5a;
+  /*Change Retry button color*/
+  color: #d6d6d6;
 }
 
 #show {
@@ -1222,7 +1227,8 @@ paper-button {
 }
 
 .is-active #controlled-by a {
-  color: rgb(51, 103, 214);
+  /*Change linked text color*/
+  color: rgb(120, 170, 255);
 }
 
 #remove-wrapper {
@@ -3507,12 +3513,13 @@ paper-item {
  * found in the LICENSE file. */
 
 :root {
+  /*Change background and bar downloads color, original Google comments below*/
   /* This is a custom, Chrome-specific color that does not have a --paper or
    * --google equivalent. */
-  --md-background-color: rgb(241, 241, 241);
+  --md-background-color: rgb(39, 43, 53);
   /* This is --google-blue-700, rewritten as a native custom property for speed.
    */
-  --md-toolbar-color: rgb(51, 103, 214);
+  --md-toolbar-color: rgb(86, 117, 185);
 }
 
 </style>
