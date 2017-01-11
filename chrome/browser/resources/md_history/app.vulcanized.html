@@ -29,12 +29,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
  * found in the LICENSE file. */
 
 :root {
+  /*Change background and bar history color, original Google comments below*/
   /* This is a custom, Chrome-specific color that does not have a --paper or
    * --google equivalent. */
-  --md-background-color: rgb(241, 241, 241);
+  --md-background-color: rgb(39, 43, 53);
   /* This is --google-blue-700, rewritten as a native custom property for speed.
    */
-  --md-toolbar-color: rgb(51, 103, 214);
+  --md-toolbar-color: rgb(86, 117, 185);
 }
 
 </style>
@@ -2386,8 +2387,9 @@ h1 {
     --card-sizing_-_margin:  0 auto; --card-sizing_-_max-width:  var(--card-max-width); --card-sizing_-_min-width:  var(--card-min-width); --card-sizing_-_padding:  0 var(--card-padding-side); --card-sizing_-_width:  calc(100% - 2 * var(--card-padding-side));;
     --first-card-padding-top: 24px;
     --item-height: 44px;
-    --primary-text-color: #333;
-    --secondary-text-color: #757575;
+    /*Change text colors on links and domain/misc*/
+    --primary-text-color: #78AAFF;
+    --secondary-text-color: #d6d6d6;
     --side-bar-width: 256px;
     --toolbar-grouped-height: 101px;
     --toolbar-height: 56px;
@@ -2963,7 +2965,8 @@ paper-tabs {
   align-items: center;
         border-bottom: 1px solid var(--card-border-color);
         border-radius: 2px 2px 0 0;
-        color: var(--primary-text-color);
+        /*Use secondary, white is better for the title*/
+        color: var(--secondary-text-color);
         display: flex;
         font-size: 14px;
         font-weight: 500;
@@ -3140,7 +3143,8 @@ button {
 }
 
 #time-accessed {
-  color: #646464;
+  /*Change text color of last access time*/
+  color: #d6d6d6;
         min-width: 96px;
 }
 
@@ -3194,7 +3198,8 @@ button {
 
 #background {
   box-shadow: var(--shadow-elevation-2dp_-_box-shadow);
-        background: #fff;
+        /*Change cards background color on history*/
+        background: #4E5764;
         bottom: 0;
         left: 0;
         position: absolute;
@@ -3693,7 +3698,8 @@ div.separator {
 iron-selector {
   -webkit-user-select: none;
         background-color: transparent;
-        color: #5a5a5a;
+        /*Change unselected option color on the left, Ex. "Chrome history" "Tabs from other devices" */
+        color: #d6d6d6;
 }
 
 iron-selector > a {
