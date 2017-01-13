@@ -50,26 +50,27 @@ list > [anchor],
 grid > [anchor] {
 
 }
-
+/*Following changes modify the bookmarks color on hover, selected and hover on selected*/
 list:not([disabled]) > :hover,
 grid:not([disabled]) > :hover {
-  background-color: hsl(214, 91%, 97%);
+  background-color: rgb(86, 117, 185);
   border-color: hsl(214, 91%, 85%);
   z-index: 1;
 }
 
 list > [selected],
 grid > [selected] {
-  background-color: hsl(0, 0%, 90%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.8),
-                                            rgba(255, 255, 255, 0));
+  background-color: rgb(78, 87, 100);
+  /*Comment this as I don't need it*/
+  /*background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.8),
+                                            rgba(255, 255, 255, 0));*/
   border-color: hsl(0, 0%, 85%);
   z-index: 2;
 }
 
 list:focus > [selected],
 grid:focus > [selected] {
-  background-color: hsl(214, 91%, 89%);
+  background-color: rgb(78, 87, 100);
   border-color: hsl(214, 91%, 65%);
 }
 
@@ -77,7 +78,7 @@ list:focus > [lead][selected],
 list > [selected]:hover,
 grid:focus > [lead][selected],
 grid > [selected]:hover {
-  background-color: hsl(214, 91%, 87%);
+  background-color: rgb(86, 117, 185);
   border-color: hsl(214, 91%, 65%);
 }
 

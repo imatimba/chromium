@@ -31,6 +31,8 @@ header h1 {
   font-weight: normal;
   line-height: 1;
   margin: 15px 0;
+  /*Set text color for "Bookmark manager"*/
+  color: rgb(214, 214, 214);
 }
 
 header > :-webkit-any(form, input[type='search']) {

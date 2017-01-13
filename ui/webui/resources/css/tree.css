@@ -13,7 +13,8 @@ tree {
   background-color: rgba(255, 255, 255, 0);
   border: 1px solid rgba(255, 255, 255, 0); /* transparent white */
   border-radius: 2px;
-  color: black;
+  /*Change text color of bookmark folders*/
+  color: #d6d6d6;
   cursor: default;
   line-height: 28px;
   padding: 0 3px;
@@ -56,29 +57,30 @@ html[dir=rtl] .expand-icon {
 .tree-row[has-children=false] .expand-icon {
   visibility: hidden;
 }
-
+/*Following changes modify the folders color on hover, selected and hover on selected*/
 .tree-row:hover {
-  background-color: hsl(214, 91%, 97%);
+  background-color: rgb(86, 117, 185);
   border-color: hsl(214, 91%, 85%);
   z-index: 1;
 }
 
 /* WebKit has a bug with attribute selectors so we apply selected to the tree
  * row as well. https://bugs.webkit.org/show_bug.cgi?id=12519. */
-.tree-row[selected] {
+ /*Comment this as I don't need it*/
+/*.tree-row[selected] {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.8),
                                             rgba(255,255,255,0));
-}
+}*/
 
 .tree-row[selected] {
-  background-color: hsl(0, 0%, 90%);
+  background-color: rgb(78, 87, 100);
   border-color: hsl(0, 0%, 85%);
   z-index: 2;
 }
 
 .tree-row[selected]:hover,
 tree:focus .tree-row[selected] {
-  background-color: hsl(214, 91%, 89%);
+  background-color: rgb(78, 87, 100);
   border-color: rgb(125, 162, 206);
 }
 
