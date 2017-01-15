@@ -12,7 +12,7 @@ body {
 }
 
 a {
-  color: blue;
+  color: #78AAFF;
   font-size: 103%;
 }
 
@@ -42,11 +42,13 @@ h1 {
   font-weight: bold;
   margin: 0;
   padding: 0;
+  color: #d6d6d6
 }
 
 .blurb-container {
   font-size: 120%;
   padding-bottom: 1.5em;
+  color: #d6d6d6;
 }
 
 #blurb-warning {
@@ -57,6 +59,7 @@ h1 {
 div.content {
   font-size: 88%;
   margin: 5px auto 10px;
+  color: #A0A0A0
 }
 
 div.content:last-of-type {
@@ -64,7 +67,7 @@ div.content:last-of-type {
 }
 
 .section-header {
-  background: rgb(235, 239, 249);
+  background: rgb(57, 63, 76);
   border-top: 1px solid rgb(181, 199, 222);
   font-size: 99%;
   padding: 2px 5px 3px;
@@ -82,6 +85,7 @@ div.content:last-of-type {
 .section-header-title {
   font-weight: bold;
   line-height: 200%;
+  color: #d6d6d6;
 }
 
 select {
@@ -116,13 +120,13 @@ html[dir=rtl] #experiment-reset-all {
 
 .experiment-unsupported > td,
 .experiment-default > td {
-  background: #F0F0F0;
+  background: #393F4C;
   color: #A0A0A0;
 }
 
 .experiment-unsupported .experiment-name,
 .experiment-default .experiment-name {
-  color: #000;
+  color: #d6d6d6;
 }
 
 .experiment {
@@ -141,6 +145,7 @@ html[dir=rtl] #experiment-reset-all {
 
 .experiment-name {
   font-weight: bold;
+  color: #d6d6d6;
 }
 
 .referenced .experiment-name {
@@ -157,8 +162,9 @@ html[dir=rtl] #experiment-reset-all {
 div.needs-restart {
   /* If you modify properties that change the height of this,
    * update body.padding-bottom. */
-  background: #FFF;
+  background: #4E5764;
   border-top: 1px solid rgb(181, 199, 222);
+  color: #d6d6d6;
   bottom: 0;
   box-shadow: 0 -2px 2px #ddd;
   box-sizing: border-box;
