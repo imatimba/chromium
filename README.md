@@ -12,13 +12,13 @@ A project to apply a dark theme to Chromium internal pages and fix some bugs rel
 **Windows:**
 
 You can download the latest installer from [Releases](https://github.com/imatimba/darker-chromium/releases).  
-If you want to compile it yourself there are 2 types of patch files provided, full and individual.  
+If you want to compile it yourself you can download the patch file in [Releases](https://github.com/imatimba/darker-chromium/releases).  
 You will need to do a full Chromium checkout or use the tarballs provided in [this](https://github.com/zcbenz/chromium-source-tarball) repo as the offical source tarballs only contain dependencies for Linux.
 
 **Linux:**
 
 I can't provide installers at the moment, I need to figure out how to correctly create .deb and .rpm packages.  
-You can download any of the patch files in [Releases](https://github.com/imatimba/darker-chromium/releases) and compile it yourself downloading Chromium source tarball taking as reference your Distro's Chromium compiling process (What args.gn to use, extra necessary patches, etc).
+You can download the patch file in [Releases](https://github.com/imatimba/darker-chromium/releases) and compile it yourself downloading Chromium source tarball taking as reference your Distro's Chromium compiling process (What args.gn to use, extra necessary patches, etc).
 
 **Mac:**
 
