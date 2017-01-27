@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -10,23 +8,8 @@
       "paintInvalidations": [
         {
           "object": "LayoutBlockFlow DIV id='target'",
-          "rect": [100, 210, 200, 90],
-          "reason": "incremental"
-        },
-        {
-          "object": "LayoutBlockFlow DIV id='target'",
-          "rect": [100, 220, 200, 80],
-          "reason": "incremental"
-        },
-        {
-          "object": "LayoutBlockFlow DIV id='target'",
-          "rect": [210, 100, 90, 200],
-          "reason": "incremental"
-        },
-        {
-          "object": "LayoutBlockFlow DIV id='target'",
-          "rect": [220, 100, 80, 200],
-          "reason": "incremental"
+          "rect": [100, 100, 200, 200],
+          "reason": "border box change"
         }
       ]
     }
@@ -34,7 +17,7 @@
   "objectPaintInvalidations": [
     {
       "object": "LayoutBlockFlow DIV id='target'",
-      "reason": "incremental"
+      "reason": "border box change"
     }
   ]
 }

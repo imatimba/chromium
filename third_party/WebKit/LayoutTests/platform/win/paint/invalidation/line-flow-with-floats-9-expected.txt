@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -9,18 +7,8 @@
       "drawsContent": true,
       "paintInvalidations": [
         {
-          "object": "LayoutBlockFlow HTML",
-          "rect": [0, 0, 500, 600],
-          "reason": "forced by layout"
-        },
-        {
           "object": "LayoutBlockFlow P",
           "rect": [8, 569, 418, 21],
-          "reason": "incremental"
-        },
-        {
-          "object": "LayoutBlockFlow P",
-          "rect": [8, 572, 418, 18],
           "reason": "incremental"
         },
         {
@@ -119,10 +107,6 @@
     {
       "object": "VerticalScrollbar",
       "reason": "scroll"
-    },
-    {
-      "object": "LayoutBlockFlow HTML",
-      "reason": "forced by layout"
     },
     {
       "object": "LayoutBlockFlow P",

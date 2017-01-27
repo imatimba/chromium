@@ -21,17 +21,11 @@
 #include "ui/events/ozone/evdev/events_ozone_evdev_export.h"
 #include "ui/events/ozone/evdev/touch_evdev_debug_buffer.h"
 
-namespace gfx {
-class PointF;
-}
-
 namespace ui {
 
 class DeviceEventDispatcherEvdev;
-class TouchEvent;
 class TouchNoiseFinder;
 struct InProgressTouchEvdev;
-struct PointerDetails;
 
 class EVENTS_OZONE_EVDEV_EXPORT TouchEventConverterEvdev
     : public EventConverterEvdev {
@@ -84,17 +78,12 @@ class EVENTS_OZONE_EVDEV_EXPORT TouchEventConverterEvdev
   void ReportTouchEvent(const InProgressTouchEvdev& event,
                         EventType event_type,
                         base::TimeTicks timestamp);
-  void ReportStylusEvent(const InProgressTouchEvdev& event,
-                         base::TimeTicks timestamp);
-  void ReportButton(unsigned int button,
-                    bool down,
-                    const InProgressTouchEvdev& event,
-                    base::TimeTicks timestamp);
   void ReportEvents(base::TimeTicks timestamp);
 
   void UpdateTrackingId(int slot, int tracking_id);
   void ReleaseTouches();
   void ReleaseButtons();
+  void CancelAllTouches();
   // Normalize pressure value to [0, 1].
   float ScalePressure(int32_t value);
 

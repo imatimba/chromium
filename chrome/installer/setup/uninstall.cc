@@ -32,6 +32,7 @@
 #include "chrome/common/chrome_result_codes.h"
 #include "chrome/installer/setup/install.h"
 #include "chrome/installer/setup/install_worker.h"
+#include "chrome/installer/setup/installer_state.h"
 #include "chrome/installer/setup/setup_constants.h"
 #include "chrome/installer/setup/setup_util.h"
 #include "chrome/installer/setup/user_hive_visitor.h"
@@ -45,7 +46,6 @@
 #include "chrome/installer/util/helper.h"
 #include "chrome/installer/util/install_util.h"
 #include "chrome/installer/util/installation_state.h"
-#include "chrome/installer/util/installer_state.h"
 #include "chrome/installer/util/logging_installer.h"
 #include "chrome/installer/util/self_cleaning_temp_dir.h"
 #include "chrome/installer/util/shell_util.h"
@@ -757,7 +757,7 @@ void UninstallActiveSetupEntries(const InstallerState& installer_state,
   //
   // It is however very hard to delete those values as the registry hives for
   // other users are not loaded by default under HKEY_USERS (unless a user is
-  // logged on or has a process impersonating him).
+  // logged on or has a process impersonating them).
   //
   // Following our best effort uninstall practices, try to delete the value in
   // all users hives. If a given user's hive is not loaded, try to load it to

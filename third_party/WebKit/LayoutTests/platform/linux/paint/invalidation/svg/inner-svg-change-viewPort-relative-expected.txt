@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -17,11 +15,6 @@
           "object": "LayoutSVGViewportContainer svg id='inner'",
           "rect": [0, 0, 200, 200],
           "reason": "full"
-        },
-        {
-          "object": "LayoutSVGRoot svg",
-          "rect": [100, 0, 100, 200],
-          "reason": "incremental"
         },
         {
           "object": "LayoutSVGInlineText #text",
@@ -78,20 +71,8 @@
   ],
   "objectPaintInvalidations": [
     {
-      "object": "LayoutSVGRoot svg",
-      "reason": "incremental"
-    },
-    {
       "object": "LayoutSVGViewportContainer svg id='inner'",
       "reason": "full"
-    },
-    {
-      "object": "LayoutSVGHiddenContainer defs",
-      "reason": "location change"
-    },
-    {
-      "object": "LayoutSVGPath polygon id='triangle'",
-      "reason": "location change"
     },
     {
       "object": "LayoutSVGRect rect",

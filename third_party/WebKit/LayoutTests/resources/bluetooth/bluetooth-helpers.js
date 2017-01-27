@@ -2,10 +2,10 @@
 
 // Bluetooth UUID constants:
 // Services:
-var blacklist_test_service_uuid = "611c954a-263b-4f4a-aab6-01ddb953f985";
+var blocklist_test_service_uuid = "611c954a-263b-4f4a-aab6-01ddb953f985";
 var request_disconnection_service_uuid = "01d7d889-7451-419f-aeb8-d65e7b9277af";
 // Characteristics:
-var blacklist_exclude_reads_characteristic_uuid =
+var blocklist_exclude_reads_characteristic_uuid =
   "bad1c9a2-9a5b-4015-8b60-1579bbbf2135";
 var request_disconnection_characteristic_uuid =
   "01d7d88a-7451-419f-aeb8-d65e7b9277af";
@@ -316,6 +316,24 @@ class EventCatcher {
     }
     object.addEventListener(event, event_listener);
   }
+}
+
+// Returns a function that when called returns a promise that resolves when
+// the device has disconnected. Example:
+// device.gatt.connect()
+//   .then(gatt => get_request_disconnection(gatt))
+//   .then(requestDisconnection => requestDisconnection())
+//   .then(() => // device is now disconnected)
+function get_request_disconnection(gattServer) {
+  return gattServer.getPrimaryService(request_disconnection_service_uuid)
+    .then(service => service.getCharacteristic(request_disconnection_characteristic_uuid))
+    .then(characteristic => {
+      return () => assert_promise_rejects_with_message(
+        characteristic.writeValue(new Uint8Array([0])),
+        new DOMException(
+          'GATT Server disconnected while performing a GATT operation.',
+          'NetworkError'));
+    });
 }
 
 function generateRequestDeviceArgsWithServices(services = ['heart_rate']) {

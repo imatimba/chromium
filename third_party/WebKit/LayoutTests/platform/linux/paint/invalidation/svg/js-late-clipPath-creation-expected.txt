@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -11,7 +9,7 @@
         {
           "object": "LayoutSVGContainer g id='content'",
           "rect": [16, 42, 784, 170],
-          "reason": "full"
+          "reason": "bounds change"
         },
         {
           "object": "LayoutSVGInlineText #text",
@@ -24,11 +22,6 @@
           "reason": "style change"
         },
         {
-          "object": "LayoutSVGRoot svg id='svg-root'",
-          "rect": [334, 42, 466, 170],
-          "reason": "incremental"
-        },
-        {
           "object": "LayoutSVGPath path",
           "rect": [0, 0, 334, 500],
           "reason": "layoutObject insertion"
@@ -38,12 +31,8 @@
   ],
   "objectPaintInvalidations": [
     {
-      "object": "LayoutSVGRoot svg id='svg-root'",
-      "reason": "incremental"
-    },
-    {
       "object": "LayoutSVGContainer g id='content'",
-      "reason": "full"
+      "reason": "bounds change"
     },
     {
       "object": "LayoutSVGText text",

@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -10,13 +8,13 @@
       "paintInvalidations": [
         {
           "object": "LayoutBlockFlow (positioned) DIV id='scrollable'",
-          "rect": [8, 50, 300, 100],
-          "reason": "border box change"
+          "rect": [8, 135, 285, 15],
+          "reason": "scroll"
         },
         {
           "object": "LayoutBlockFlow (positioned) DIV id='scrollable'",
-          "rect": [8, 135, 285, 15],
-          "reason": "scroll"
+          "rect": [108, 50, 200, 100],
+          "reason": "incremental"
         },
         {
           "object": "LayoutBlockFlow (positioned) DIV id='scrollable'",
@@ -49,7 +47,7 @@
   "objectPaintInvalidations": [
     {
       "object": "LayoutBlockFlow (positioned) DIV id='scrollable'",
-      "reason": "border box change"
+      "reason": "incremental"
     },
     {
       "object": "LayoutBlockFlow (positioned) DIV id='scrollable'",

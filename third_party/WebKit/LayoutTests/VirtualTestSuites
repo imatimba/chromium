@@ -12,6 +12,11 @@
   },
   {
     "prefix": "threaded",
+    "base": "fast/idleToBlob",
+    "args": ["--enable-threaded-compositing"]
+  },
+  {
+    "prefix": "threaded",
     "base": "compositing/visibility",
     "args": ["--enable-threaded-compositing"]
   },
@@ -59,7 +64,7 @@
   },
   {
     "prefix": "gpu-rasterization",
-    "base": "fast/images",
+    "base": "images",
     "args": ["--force-gpu-rasterization"]
   },
   {
@@ -139,6 +144,11 @@
   },
   {
     "prefix": "rootlayerscrolls",
+    "base": "scrollingcoordinator",
+    "args": ["--root-layer-scrolls"]
+  },
+  {
+    "prefix": "rootlayerscrolls",
     "base": "fast/scrolling",
     "args": ["--root-layer-scrolls"]
   },
@@ -171,11 +181,6 @@
     "prefix": "smoothscrolling",
     "base": "fast/events/touch/gesture",
     "args": ["--enable-smooth-scrolling"]
-  },
-  {
-    "prefix": "mediasession",
-    "base": "media/mediasession",
-    "args": ["--enable-blink-features=MediaSession"]
   },
   {
     "prefix": "mse-1mb-buffers",
@@ -260,11 +265,6 @@
     "args": ["--enable-blink-features=DocumentWriteEvaluator"]
   },
   {
-    "prefix": "asyncawait",
-    "base": "inspector/sources/debugger-async/async-await",
-    "args": ["--js-flags=--harmony-async-await"]
-  },
-  {
     "prefix": "wheelscrolllatching",
     "base": "fast/events/wheel",
     "args": ["--enable-features=TouchpadAndWheelScrollLatching"]
@@ -285,6 +285,11 @@
     "args": ["--enable-blink-features=LoadingWithMojo"]
   },
   {
+    "prefix": "mojo-loading",
+    "base": "http/tests/xmlhttprequest",
+    "args": ["--enable-blink-features=LoadingWithMojo"]
+  },
+  {
     "prefix": "scalefactor150",
     "base": "fast/events/synthetic-events",
     "args": ["--force-device-scale-factor=1.5"]
@@ -292,12 +297,17 @@
   {
     "prefix": "enable_wasm",
     "base": "http/tests/wasm",
-    "args": ["--enable-wasm"]
+    "args": ["--enable-features=WebAssembly"]
   },
   {
-    "prefix": "mojo-service-worker",
+    "prefix": "disable-mojo-service-worker",
     "base": "http/tests/serviceworker",
-    "args": ["--mojo-service-worker"]
+    "args": ["--disable-mojo-service-worker"]
+  },
+  {
+    "prefix": "service-worker-navigation-preload",
+    "base": "http/tests/serviceworker",
+    "args": ["--enable-features=ServiceWorkerNavigationPreload"]
   },
   {
     "prefix": "layout_ng",
@@ -307,6 +317,11 @@
   {
     "prefix": "layout_ng",
     "base": "fast/block/margin-collapse",
+    "args": ["--enable-blink-features=LayoutNG"]
+  },
+  {
+    "prefix": "layout_ng",
+    "base": "fast/block/float",
     "args": ["--enable-blink-features=LayoutNG"]
   }
 ]

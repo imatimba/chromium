@@ -20,13 +20,20 @@
         testRunner.waitUntilDone();
         testRunner.setCanOpenWindows();
         testRunner.setCloseRemainingWindowsWhenComplete(true);
+        testRunner.setDumpJavaScriptDialogs(false);
     }
 
     // Disable the default output of testharness.js.  The default output formats
     // test results into an HTML table.  When that table is dumped as text, no
     // spacing between cells is preserved, and it is therefore not readable. By
     // setting output to false, the HTML table will not be created.
-    setup({"output":false});
+    // Also, disable timeout (except for explicit timeout), since the Blink
+    // layout test runner has its own timeout mechanism.
+    // See: https://github.com/w3c/testharness.js/blob/master/docs/api.md#setup
+    setup({
+        "output": false,
+        "explicit_timeout": true
+    });
 
     // Function used to convert the test status code into the corresponding
     // string
@@ -79,37 +86,65 @@
         return !!document.querySelector('script[src*="/resources/testharness"]');
     }
 
+    function isWPTManualTest() {
+        var path = location.pathname;
+        if (location.hostname == 'web-platform.test' && path.endsWith('-manual.html'))
+            return true;
+        return /\/imported\/wpt\/.*-manual\.html$/.test(path);
+    }
 
-    function injectSyntheticInput() {
-        var path = window.location.pathname;
-        if (path.match(/imported\/wpt\/.*\.html$/)) {
-            // Set a global variable for the address of automated input script if they need to use it.
-            var automated_input_scripts_folder = path.replace(/imported\/wpt\/(.*)\.html$/, 'imported/wpt_automation');
-
-            importAutomationScript = function(relativePath) {
-              var common_script = document.createElement('script');
-              common_script.setAttribute('src', automated_input_scripts_folder + relativePath);
-              document.head.appendChild(common_script);
-            }
-
-            path = path.replace(/imported\/wpt\/(.*)\.html$/, "imported/wpt_automation/$1-automation.js");
-            var input_script = document.createElement('script');
-            input_script.setAttribute('src', path);
-            document.head.appendChild(input_script);
+    // Returns a directory part relative to WPT root and a basename part of the
+    // current test. e.g.
+    // Current test: file:///.../LayoutTests/imported/wpt/pointerevents/foobar.html
+    // Output: "/pointerevents/foobar"
+    function pathAndBaseNameInWPT() {
+        var path = location.pathname;
+        if (location.hostname == 'web-platform.test') {
+            var matches = path.match(/^(\/.*)\.html$/);
+            return matches ? matches[1] : null;
         }
+        var matches = path.match(/imported\/wpt(\/.*)\.html$/);
+        return matches ? matches[1] : null;
+    }
+
+    function loadAutomationScript() {
+        var pathAndBase = pathAndBaseNameInWPT();
+        if (!pathAndBase)
+            return;
+        var automationPath = location.pathname.replace(/\/imported\/wpt\/.*$/, '/imported/wpt_automation');
+        if (location.hostname == 'web-platform.test')
+            automationPath = '/wpt_automation';
+
+        // Export importAutomationScript for use by the automation scripts.
+        window.importAutomationScript = function(relativePath) {
+            var script = document.createElement('script');
+            script.src = automationPath + relativePath;
+            document.head.appendChild(script);
+        }
+
+        var src;
+        if (pathAndBase.startsWith('/fullscreen/')) {
+            // Fullscreen tests all use the same automation script.
+            src = automationPath + '/fullscreen/auto-click.js';
+        } else if (pathAndBase.startsWith('/pointerevents/')
+                   || pathAndBase.startsWith('/uievents/')) {
+            // Per-test automation scripts.
+            src = automationPath + pathAndBase + '-automation.js';
+        } else {
+            return;
+        }
+        var script = document.createElement('script');
+        script.src = src;
+        document.head.appendChild(script);
     }
 
     var didDispatchLoadEvent = false;
-    var handleLoad = function() {
+    window.addEventListener('load', function() {
         didDispatchLoadEvent = true;
-        window.removeEventListener('load', handleLoad);
-        // Add synthetic input to pointer event manual tests
-        if(window.location.pathname.includes('imported/wpt/pointerevents/')
-            || window.location.pathname.includes('imported/wpt/uievents/')) {
-            setTimeout(injectSyntheticInput, 0);
+        if (isWPTManualTest()) {
+            setTimeout(loadAutomationScript, 0);
         }
-    };
-    window.addEventListener('load', handleLoad, false);
+    }, { once: true });
 
     // Using a callback function, test results will be added to the page in a
     // manner that allows dumpAsText to produce readable test results.
@@ -130,12 +165,39 @@
                 harness_status.message +
                 "\n";
         }
-        // Iterate through tests array and build string that contains
-        // results for all tests.
-        for (var i = 0; i < tests.length; ++i) {
-            resultStr += convertResult(tests[i].status) + " " +
-                sanitize(tests[i].name) + " " +
-                sanitize(tests[i].message) + "\n";
+        // reflection tests contain huge number of tests, and Chromium code
+        // review tool has the 1MB diff size limit. We merge PASS lines.
+        if (document.URL.indexOf("/html/dom/reflection") >= 0) {
+            for (var i = 0; i < tests.length; ++i) {
+                if (tests[i].status == 0) {
+                    var colon = tests[i].name.indexOf(':');
+                    if (colon > 0) {
+                        var prefix = tests[i].name.substring(0, colon + 1);
+                        var j = i + 1;
+                        for (; j < tests.length; ++j) {
+                            if (!tests[j].name.startsWith(prefix) || tests[j].status != 0)
+                                break;
+                        }
+                        if ((j - i) > 1) {
+                            resultStr += convertResult(tests[i].status) +
+                                " " + sanitize(prefix) + " " + (j - i) + " tests\n"
+                            i = j - 1;
+                            continue;
+                        }
+                    }
+                }
+                resultStr += convertResult(tests[i].status) + " " +
+                    sanitize(tests[i].name) + " " +
+                    sanitize(tests[i].message) + "\n";
+            }
+        } else {
+            // Iterate through tests array and build string that contains
+            // results for all tests.
+            for (var i = 0; i < tests.length; ++i) {
+                resultStr += convertResult(tests[i].status) + " " +
+                    sanitize(tests[i].name) + " " +
+                    sanitize(tests[i].message) + "\n";
+            }
         }
 
         resultStr += "Harness: the test ran to completion.\n";
@@ -145,6 +207,11 @@
 
         function done() {
             if (self.testRunner) {
+                // The following DOM operations may show console messages.  We
+                // suppress them because they are not related to the running
+                // test.
+                testRunner.setDumpConsoleMessages(false);
+
                 if (isCSSWGTest() || isJSTest()) {
                     // Anything isn't material to the testrunner output, so
                     // should be hidden from the text dump.

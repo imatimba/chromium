@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -26,42 +24,42 @@
         {
           "object": "LayoutSVGRect rect id='targetRect'",
           "rect": [209, 269, 200, 200],
-          "reason": "bounds change"
+          "reason": "forced by layout"
         },
         {
           "object": "LayoutSVGRect rect id='targetRect'",
           "rect": [9, 269, 200, 200],
-          "reason": "full"
+          "reason": "forced by layout"
         },
         {
           "object": "LayoutSVGContainer g id='targetUse'",
           "rect": [9, 69, 200, 200],
-          "reason": "full"
+          "reason": "bounds change"
         },
         {
           "object": "LayoutSVGContainer use",
           "rect": [9, 69, 200, 200],
-          "reason": "full"
+          "reason": "bounds change"
         },
         {
           "object": "LayoutSVGContainer use id='targetUse'",
           "rect": [9, 69, 200, 200],
-          "reason": "full"
+          "reason": "bounds change"
         },
         {
           "object": "LayoutSVGRect rect id='targetRect1'",
           "rect": [9, 69, 200, 200],
-          "reason": "full"
+          "reason": "forced by layout"
         },
         {
           "object": "LayoutSVGRect rect id='targetRect1'",
           "rect": [9, 69, 200, 200],
-          "reason": "full"
+          "reason": "forced by layout"
         },
         {
           "object": "LayoutSVGRect rect id='targetRect1'",
           "rect": [9, 69, 200, 200],
-          "reason": "full"
+          "reason": "forced by layout"
         },
         {
           "object": "LayoutSVGContainer use",
@@ -71,7 +69,7 @@
         {
           "object": "LayoutSVGRect rect id='targetRect'",
           "rect": [59, 269, 50, 200],
-          "reason": "bounds change"
+          "reason": "forced by layout"
         }
       ]
     }
@@ -90,24 +88,20 @@
       "reason": "forced by layout"
     },
     {
-      "object": "LayoutSVGHiddenContainer defs",
-      "reason": "location change"
-    },
-    {
       "object": "LayoutSVGRect rect id='targetRect'",
-      "reason": "full"
+      "reason": "forced by layout"
     },
     {
       "object": "LayoutSVGRect rect id='targetRect1'",
-      "reason": "full"
+      "reason": "forced by layout"
     },
     {
       "object": "LayoutSVGContainer use id='targetUse'",
-      "reason": "full"
+      "reason": "bounds change"
     },
     {
       "object": "LayoutSVGRect rect id='targetRect1'",
-      "reason": "full"
+      "reason": "forced by layout"
     },
     {
       "object": "LayoutSVGContainer use",
@@ -115,19 +109,19 @@
     },
     {
       "object": "LayoutSVGRect rect id='targetRect'",
-      "reason": "bounds change"
+      "reason": "forced by layout"
     },
     {
       "object": "LayoutSVGContainer use",
-      "reason": "full"
+      "reason": "bounds change"
     },
     {
       "object": "LayoutSVGContainer g id='targetUse'",
-      "reason": "full"
+      "reason": "bounds change"
     },
     {
       "object": "LayoutSVGRect rect id='targetRect1'",
-      "reason": "full"
+      "reason": "forced by layout"
     }
   ]
 }

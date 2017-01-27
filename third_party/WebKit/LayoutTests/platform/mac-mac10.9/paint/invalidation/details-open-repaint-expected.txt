@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -58,14 +56,6 @@
     },
     {
       "object": "HorizontalScrollbar",
-      "reason": "scroll"
-    },
-    {
-      "object": "LayoutBlockFlow DIV id='inner-editor'",
-      "reason": "scroll"
-    },
-    {
-      "object": "VerticalScrollbar",
       "reason": "scroll"
     },
     {

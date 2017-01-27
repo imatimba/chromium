@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -19,22 +17,22 @@
           "reason": "layoutObject insertion"
         },
         {
-          "object": "LayoutBR BR",
+          "object": "LayoutBlockFlow DIV id='div'",
           "rect": [7, 77, 3, 20],
           "reason": "invalidate paint rectangle"
         },
         {
-          "object": "LayoutBR BR",
+          "object": "LayoutBlockFlow DIV id='div'",
           "rect": [7, 77, 3, 20],
           "reason": "invalidate paint rectangle"
         },
         {
-          "object": "LayoutBR BR",
+          "object": "LayoutBlockFlow DIV id='div'",
           "rect": [7, 77, 3, 20],
           "reason": "invalidate paint rectangle"
         },
         {
-          "object": "LayoutBR BR",
+          "object": "LayoutBlockFlow DIV id='div'",
           "rect": [7, 59, 3, 20],
           "reason": "invalidate paint rectangle"
         }

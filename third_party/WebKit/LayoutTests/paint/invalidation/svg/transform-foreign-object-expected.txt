@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -19,11 +17,6 @@
           "reason": "subtree"
         },
         {
-          "object": "LayoutSVGRoot svg",
-          "rect": [108, 8, 100, 100],
-          "reason": "bounds change"
-        },
-        {
           "object": "LayoutBlockFlow DIV",
           "rect": [8, 8, 100, 100],
           "reason": "subtree"
@@ -32,20 +25,11 @@
           "object": "LayoutSVGForeignObject foreignObject",
           "rect": [8, 8, 100, 100],
           "reason": "subtree"
-        },
-        {
-          "object": "LayoutSVGRoot svg",
-          "rect": [8, 8, 100, 100],
-          "reason": "bounds change"
         }
       ]
     }
   ],
   "objectPaintInvalidations": [
-    {
-      "object": "LayoutSVGRoot svg",
-      "reason": "bounds change"
-    },
     {
       "object": "LayoutSVGForeignObject foreignObject",
       "reason": "subtree"

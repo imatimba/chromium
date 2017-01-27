@@ -13,6 +13,7 @@
 #include "base/time/time.h"
 #include "base/values.h"
 #include "chrome/browser/certificate_viewer.h"
+#include "chrome/browser/data_use_measurement/data_use_web_contents_observer.h"
 #include "chrome/browser/file_select_helper.h"
 #include "chrome/browser/infobars/infobar_service.h"
 #include "chrome/browser/profiles/profile.h"
@@ -33,7 +34,7 @@
 #include "components/app_modal/javascript_dialog_manager.h"
 #include "components/pref_registry/pref_registry_syncable.h"
 #include "components/prefs/scoped_user_pref_update.h"
-#include "components/syncable_prefs/pref_service_syncable.h"
+#include "components/sync_preferences/pref_service_syncable.h"
 #include "components/zoom/page_zoom.h"
 #include "components/zoom/zoom_controller.h"
 #include "content/public/browser/browser_thread.h"
@@ -50,7 +51,9 @@
 #include "content/public/common/content_client.h"
 #include "content/public/common/url_constants.h"
 #include "net/base/escape.h"
-#include "third_party/WebKit/public/web/WebInputEvent.h"
+#include "third_party/WebKit/public/platform/WebGestureEvent.h"
+#include "third_party/WebKit/public/platform/WebInputEvent.h"
+#include "third_party/WebKit/public/public_features.h"
 #include "ui/base/page_transition_types.h"
 #include "ui/events/keycodes/dom/keycode_converter.h"
 #include "ui/events/keycodes/keyboard_code_conversion.h"
@@ -208,9 +211,9 @@ GURL DecorateFrontendURL(const GURL& base_url) {
         switches::kDevToolsFlags);
   }
 
-#if defined(DEBUG_DEVTOOLS)
+#if BUILDFLAG(DEBUG_DEVTOOLS)
   url_string += "&debugFrontend=true";
-#endif  // defined(DEBUG_DEVTOOLS)
+#endif  // BUILDFLAG(DEBUG_DEVTOOLS)
 
   return GURL(url_string);
 }
@@ -559,6 +562,7 @@ void DevToolsWindow::OpenExternalFrontend(
     if (!window)
       return;
     window->bindings_->AttachTo(agent_host);
+    window->close_on_detach_ = false;
   }
 
   window->ScheduleShow(DevToolsToggleAction::Show());
@@ -777,6 +781,7 @@ DevToolsWindow::DevToolsWindow(Profile* profile,
       browser_(nullptr),
       is_docked_(true),
       can_dock_(can_dock),
+      close_on_detach_(true),
       // This initialization allows external front-end to work without changes.
       // We don't wait for docking call, but instead immediately show undocked.
       // Passing "dockSide=undocked" parameter ensures proper UI.
@@ -789,6 +794,8 @@ DevToolsWindow::DevToolsWindow(Profile* profile,
   main_web_contents_->SetDelegate(this);
   // Bindings take ownership over devtools as its delegate.
   bindings_->SetDelegate(this);
+  data_use_measurement::DataUseWebContentsObserver::CreateForWebContents(
+      main_web_contents_);
   // DevTools uses PageZoom::Zoom(), so main_web_contents_ requires a
   // ZoomController.
   zoom::ZoomController::CreateForWebContents(main_web_contents_);
@@ -900,7 +907,7 @@ GURL DevToolsWindow::GetDevToolsURL(Profile* profile,
   }
   if (can_dock)
     url_string += "&can_dock=true";
-  return DevToolsUI::SanitizeFrontendURL(GURL(url_string));
+  return DevToolsUIBindings::SanitizeFrontendURL(GURL(url_string));
 }
 
 // static
@@ -940,11 +947,7 @@ WebContents* DevToolsWindow::OpenURLFromTab(
     return inspected_web_contents ?
         inspected_web_contents->OpenURL(params) : NULL;
   }
-
-  bindings_->Reattach();
-
-  content::NavigationController::LoadURLParams load_url_params(params.url);
-  main_web_contents_->GetController().LoadURLWithParams(load_url_params);
+  bindings_->Reload();
   return main_web_contents_;
 }
 
@@ -1014,6 +1017,8 @@ void DevToolsWindow::WebContentsCreated(WebContents* source_contents,
     // Tag the DevTools toolbox WebContents with its TaskManager specific
     // UserData so that it shows up in the task manager.
     task_manager::WebContentsTags::CreateForDevToolsContents(
+        toolbox_web_contents_);
+    data_use_measurement::DataUseWebContentsObserver::CreateForWebContents(
         toolbox_web_contents_);
   }
 }
@@ -1203,6 +1208,8 @@ void DevToolsWindow::SetWhitelistedShortcuts(
 }
 
 void DevToolsWindow::InspectedContentsClosing() {
+  if (!close_on_detach_)
+    return;
   intercepted_page_beforeunload_ = false;
   life_stage_ = kClosing;
   main_web_contents_->ClosePage();

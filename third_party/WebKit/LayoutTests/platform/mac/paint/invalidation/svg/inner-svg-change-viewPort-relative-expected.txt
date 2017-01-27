@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -39,11 +37,6 @@
           "reason": "full"
         },
         {
-          "object": "LayoutSVGRoot svg",
-          "rect": [101, 0, 99, 200],
-          "reason": "incremental"
-        },
-        {
           "object": "LayoutSVGContainer use",
           "rect": [180, 120, 20, 20],
           "reason": "full"
@@ -78,20 +71,8 @@
   ],
   "objectPaintInvalidations": [
     {
-      "object": "LayoutSVGRoot svg",
-      "reason": "incremental"
-    },
-    {
       "object": "LayoutSVGViewportContainer svg id='inner'",
       "reason": "full"
-    },
-    {
-      "object": "LayoutSVGHiddenContainer defs",
-      "reason": "location change"
-    },
-    {
-      "object": "LayoutSVGPath polygon id='triangle'",
-      "reason": "location change"
     },
     {
       "object": "LayoutSVGRect rect",

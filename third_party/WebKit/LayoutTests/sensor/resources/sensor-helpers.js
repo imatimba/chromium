@@ -1,5 +1,22 @@
 'use strict';
 
+// Wraps callback and calls reject_func if callback throws an error.
+class CallbackWrapper {
+  constructor(callback, reject_func) {
+    this.wrapper_func_ = (args) => {
+      try {
+        callback(args);
+      } catch(e) {
+        reject_func();
+      }
+    }
+  }
+
+  get callback() {
+    return this.wrapper_func_;
+  }
+}
+
 function sensor_mocks(mojo) {
   return define('Generic Sensor API mocks', [
     'mojo/public/js/core',
@@ -33,6 +50,7 @@ function sensor_mocks(mojo) {
         assert_equals(rv.result, core.RESULT_OK, "Failed to map shared buffer");
         this.buffer_array_ = rv.buffer;
         this.buffer_ = new Float64Array(this.buffer_array_);
+        this.resetBuffer();
         bindings.StubBindings(this.stub_).delegate = this;
         bindings.StubBindings(this.stub_).connectionErrorHandler = () => {
           reset();
@@ -52,7 +70,8 @@ function sensor_mocks(mojo) {
         if (!this.start_should_fail_ && this.update_reading_function_ != null) {
           let timeout = (1 / configuration.frequency) * 1000;
           this.sensor_reading_timer_id_ = window.setTimeout(() => {
-            this.update_reading_function_(this.buffer_);
+            if (this.update_reading_function_)
+              this.update_reading_function_(this.buffer_);
             if (this.reporting_mode_ === sensor.ReportingMode.ON_CHANGE) {
               this.client_.sensorReadingChanged();
             }
@@ -111,15 +130,24 @@ function sensor_mocks(mojo) {
       reset() {
         if (this.sensor_reading_timer_id_) {
           window.clearTimeout(this.sensor_reading_timer_id_);
+          this.sensor_reading_timer_id_ = null;
         }
 
         this.start_should_fail_ = false;
-        this.sensor_reading_timer_id_ = null;
+        this.update_reading_function_ = null;
         this.active_sensor_configurations_ = [];
         this.suspend_called_ = null;
         this.resume_called_ = null;
         this.add_configuration_called_ = null;
         this.remove_configuration_called_ = null;
+        this.resetBuffer();
+        core.unmapBuffer(this.buffer_array_);
+        this.buffer_array_ = null;
+        bindings.StubBindings(this.stub_).close();
+      }
+
+      // Zeroes shared buffer.
+      resetBuffer() {
         for (let i = 0; i < this.buffer_.length; ++i) {
           this.buffer_[i] = 0;
         }
@@ -176,7 +204,7 @@ function sensor_mocks(mojo) {
     class MockSensorProvider {
       constructor() {
         this.reading_size_in_bytes_ =
-            sensor_provider.SensorInitParams.kReadBufferSize;
+            sensor_provider.SensorInitParams.kReadBufferSizeForTests;
         this.shared_buffer_size_in_bytes_ = this.reading_size_in_bytes_ *
                 sensor.SensorType.LAST;
         let rv =
@@ -189,6 +217,7 @@ function sensor_mocks(mojo) {
         this.get_sensor_should_fail_ = false;
         this.resolve_func_ = null;
         this.is_continuous_ = false;
+        this.max_frequency_ = 60;
       }
 
       // Returns initialized Sensor proxy to the client.
@@ -225,7 +254,8 @@ function sensor_mocks(mojo) {
                 { memory: rv.handle,
                   buffer_offset: offset,
                   mode: reporting_mode,
-                  default_configuration: default_config });
+                  default_configuration: default_config,
+                  maximum_frequency: this.max_frequency_});
 
         if (this.resolve_func_ !== null) {
           this.resolve_func_(this.active_sensor_);
@@ -234,7 +264,6 @@ function sensor_mocks(mojo) {
         var client_handle = connection.bindProxy(proxy => {
           this.active_sensor_.client_ = proxy;
           }, sensor.SensorClient);
-
         return getSensorResponse(init_params, client_handle);
       }
 
@@ -251,10 +280,12 @@ function sensor_mocks(mojo) {
       reset() {
         if (this.active_sensor_ != null) {
           this.active_sensor_.reset();
+          this.active_sensor_ = null;
         }
 
         this.get_sensor_should_fail_ = false;
         this.resolve_func_ = null;
+        this.max_frequency_ = 60;
       }
 
       // Sets flag that forces mock SensorProvider to fail when getSensor() is
@@ -278,6 +309,11 @@ function sensor_mocks(mojo) {
       setContinuousReportingMode(reporting_mode) {
           this.is_continuous_ = reporting_mode;
       }
+
+      // Sets the maximum frequency for a concrete sensor.
+      setMaximumSupportedFrequency(frequency) {
+          this.max_frequency_ = frequency;
+      }
     }
 
     let mockSensorProvider = new MockSensorProvider;
@@ -295,8 +331,19 @@ function sensor_mocks(mojo) {
 
 function sensor_test(func, name, properties) {
   mojo_test(mojo => sensor_mocks(mojo).then(sensor => {
-    let result = Promise.resolve(func(sensor));
-    let cleanUp = () => { sensor.mockSensorProvider.reset(); };
-    return result.then(cleanUp, cleanUp);
+    // Clean up and reset mock sensor stubs asynchronously, so that the blink
+    // side closes its proxies and notifies JS sensor objects before new test is
+    // started.
+    let onSuccess = () => {
+      sensor.mockSensorProvider.reset();
+      return new Promise((resolve, reject) => { setTimeout(resolve, 0); });
+    };
+
+    let onFailure = () => {
+      sensor.mockSensorProvider.reset();
+      return new Promise((resolve, reject) => { setTimeout(reject, 0); });
+    };
+
+    return Promise.resolve(func(sensor)).then(onSuccess, onFailure);
   }), name, properties);
 }

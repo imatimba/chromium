@@ -484,11 +484,12 @@ Starting worker: resources/global-interface-listing.js
 [Worker]     setter onclose
 [Worker]     setter onerror
 [Worker]     setter onshow
-[Worker] interface OffscreenCanvas
+[Worker] interface OffscreenCanvas : EventTarget
 [Worker]     attribute @@toStringTag
 [Worker]     getter height
 [Worker]     getter width
 [Worker]     method constructor
+[Worker]     method convertToBlob
 [Worker]     method getContext
 [Worker]     method transferToImageBitmap
 [Worker]     setter height
@@ -647,6 +648,7 @@ Starting worker: resources/global-interface-listing.js
 [Worker]     getter active
 [Worker]     getter installing
 [Worker]     getter onupdatefound
+[Worker]     getter paymentAppManager
 [Worker]     getter pushManager
 [Worker]     getter scope
 [Worker]     getter sync
@@ -1257,6 +1259,11 @@ Starting worker: resources/global-interface-listing.js
 [Worker]     getter storage
 [Worker]     getter userAgent
 [Worker]     method constructor
+[Worker] interface WritableStream
+[Worker]     getter locked
+[Worker]     method abort
+[Worker]     method constructor
+[Worker]     method getWriter
 [Worker] interface XMLHttpRequest : XMLHttpRequestEventTarget
 [Worker]     attribute @@toStringTag
 [Worker]     attribute DONE

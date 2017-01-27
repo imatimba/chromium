@@ -11,6 +11,7 @@
 #include "ash/common/shelf/shelf_layout_manager_observer.h"
 #include "ash/public/cpp/shelf_types.h"
 #include "base/observer_list.h"
+#include "base/time/time.h"
 
 namespace gfx {
 class Rect;
@@ -23,6 +24,7 @@ class GestureEvent;
 namespace ash {
 
 class ShelfLayoutManager;
+class ShelfLayoutManagerTest;
 class ShelfLockingManager;
 class ShelfView;
 class ShelfWidget;
@@ -38,6 +40,10 @@ class ASH_EXPORT WmShelf : public ShelfLayoutManagerObserver {
   // Returns the shelf for the display that |window| is on. Note that the shelf
   // widget may not exist, or the shelf may not be visible.
   static WmShelf* ForWindow(WmWindow* window);
+
+  // Returns if shelf alignment options are enabled, and the user is able to
+  // adjust the alignment (eg. not allowed in guest and supervised user modes).
+  static bool CanChangeShelfAlignment();
 
   virtual void CreateShelfWidget(WmWindow* root);
   void ShutdownShelfWidget();
@@ -153,6 +159,8 @@ class ASH_EXPORT WmShelf : public ShelfLayoutManagerObserver {
                            BackgroundAnimatorChangeType change_type) override;
 
  private:
+  friend class ShelfLayoutManagerTest;
+
   // Layout manager for the shelf container window. Instances are constructed by
   // ShelfWidget and lifetimes are managed by the container windows themselves.
   ShelfLayoutManager* shelf_layout_manager_ = nullptr;
@@ -171,6 +179,10 @@ class ASH_EXPORT WmShelf : public ShelfLayoutManagerObserver {
   ShelfAutoHideBehavior auto_hide_behavior_ = SHELF_AUTO_HIDE_BEHAVIOR_NEVER;
 
   base::ObserverList<WmShelfObserver> observers_;
+
+  // Temporary. Used to investigate http://crbug.com/665093 .
+  base::TimeTicks time_last_auto_hide_change_;
+  int count_auto_hide_changes_ = 0;
 
   DISALLOW_COPY_AND_ASSIGN(WmShelf);
 };

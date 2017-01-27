@@ -38,10 +38,10 @@
 
 #if defined(MOJO_RENDERER)
 #include "media/mojo/clients/mojo_renderer.h"
+#include "media/mojo/interfaces/interface_factory.mojom.h"
 #include "media/mojo/interfaces/renderer.mojom.h"
-#include "media/mojo/interfaces/service_factory.mojom.h"
-#include "services/shell/public/cpp/connect.h"
-#include "services/shell/public/cpp/service_test.h"
+#include "services/service_manager/public/cpp/connect.h"
+#include "services/service_manager/public/cpp/service_test.h"
 
 // TODO(dalecurtis): The mojo renderer is in another process, so we have no way
 // currently to get hashes for video and audio samples.  This also means that
@@ -110,9 +110,7 @@ const char kMP4VideoHEVC2[] = "video/mp4; codecs=\"hev1.1.6.L93.B0\"";
 const char kMP4Video[] = "video/mp4; codecs=\"avc1.4D4041\"";
 const char kMP4Audio[] = "audio/mp4; codecs=\"mp4a.40.2\"";
 const char kMP3[] = "audio/mpeg";
-#if BUILDFLAG(ENABLE_MSE_MPEG2TS_STREAM_PARSER)
 const char kMP2AudioSBR[] = "video/mp2t; codecs=\"avc1.4D4041,mp4a.40.5\"";
-#endif
 #endif  // defined(USE_PROPRIETARY_CODECS)
 
 // Key used to encrypt test files.
@@ -173,6 +171,7 @@ static base::Time kLiveTimelineOffset() {
   exploded_time.year = 2012;
   exploded_time.month = 11;
   exploded_time.day_of_month = 10;
+  exploded_time.day_of_week = 6;
   exploded_time.hour = 12;
   exploded_time.minute = 34;
   exploded_time.second = 56;
@@ -183,17 +182,6 @@ static base::Time kLiveTimelineOffset() {
   timeline_offset += base::TimeDelta::FromMicroseconds(123);
 
   return timeline_offset;
-}
-
-// FFmpeg only supports time a resolution of seconds so this
-// helper function truncates a base::Time to seconds resolution.
-static base::Time TruncateToFFmpegTimeResolution(base::Time t) {
-  base::Time::Exploded exploded_time;
-  t.UTCExplode(&exploded_time);
-  exploded_time.millisecond = 0;
-  base::Time out_time;
-  EXPECT_TRUE(base::Time::FromUTCExploded(exploded_time, &out_time));
-  return out_time;
 }
 
 // Note: Tests using this class only exercise the DecryptingDemuxerStream path.
@@ -292,7 +280,7 @@ class KeyProvidingApp : public FakeEncryptedMedia::AppBase {
   void OnResolve(PromiseResult expected) { EXPECT_EQ(expected, RESOLVED); }
 
   void OnReject(PromiseResult expected,
-                media::MediaKeys::Exception exception_code,
+                media::CdmPromise::Exception exception_code,
                 uint32_t system_code,
                 const std::string& error_message) {
     EXPECT_EQ(expected, REJECTED) << error_message;
@@ -480,8 +468,7 @@ class MockMediaSource {
             base::Bind(&MockMediaSource::DemuxerOpened, base::Unretained(this)),
             base::Bind(&MockMediaSource::OnEncryptedMediaInitData,
                        base::Unretained(this)),
-            scoped_refptr<MediaLog>(new MediaLog()),
-            true)),
+            scoped_refptr<MediaLog>(new MediaLog()))),
         owned_chunk_demuxer_(chunk_demuxer_) {
     file_data_ = ReadTestDataFile(filename);
 
@@ -669,17 +656,39 @@ class MockMediaSource {
   base::TimeDelta last_timestamp_offset_;
 };
 
+// A rough simulation of GpuVideoDecoder that fails every Decode() request. This
+// is used to test post-Initialize() fallback paths.
+class FailingVideoDecoder : public VideoDecoder {
+ public:
+  std::string GetDisplayName() const override { return "FailingVideoDecoder"; }
+  void Initialize(const VideoDecoderConfig& config,
+                  bool low_delay,
+                  CdmContext* cdm_context,
+                  const InitCB& init_cb,
+                  const OutputCB& output_cb) override {
+    init_cb.Run(true);
+  }
+  void Decode(const scoped_refptr<DecoderBuffer>& buffer,
+              const DecodeCB& decode_cb) override {
+    base::ThreadTaskRunnerHandle::Get()->PostTask(
+        FROM_HERE, base::Bind(decode_cb, DecodeStatus::DECODE_ERROR));
+  }
+  void Reset(const base::Closure& closure) override { closure.Run(); }
+  bool NeedsBitstreamConversion() const override { return true; }
+};
+
 // TODO(xhwang): These tests have been disabled for some time as apptests and no
 //               longer pass. They need to be reconstituted as shell tests.
 //               Currently there are compile issues which must be resolved,
 //               preferably by eliminating multiple inheritance here which is
 //               banned by Google C++ style.
 #if defined(MOJO_RENDERER) && defined(ENABLE_MOJO_PIPELINE_INTEGRATION_TEST)
-class PipelineIntegrationTestHost : public shell::test::ServiceTest,
+class PipelineIntegrationTestHost : public service_manager::test::ServiceTest,
                                     public PipelineIntegrationTestBase {
  public:
   PipelineIntegrationTestHost()
-      : shell::test::ServiceTest("exe:media_pipeline_integration_shelltests") {}
+      : service_manager::test::ServiceTest(
+            "media_pipeline_integration_shelltests") {}
 
   void SetUp() override {
     ServiceTest::SetUp();
@@ -687,19 +696,21 @@ class PipelineIntegrationTestHost : public shell::test::ServiceTest,
   }
 
  protected:
-  std::unique_ptr<Renderer> CreateRenderer() override {
-    connector()->ConnectToInterface("service:media", &media_service_factory_);
+  std::unique_ptr<Renderer> CreateRenderer(
+      ScopedVector<VideoDecoder> prepend_video_decoders,
+      ScopedVector<AudioDecoder> prepend_audio_decoders) override {
+    connector()->ConnectToInterface("media", &media_interface_factory_);
 
     mojom::RendererPtr mojo_renderer;
-    media_service_factory_->CreateRenderer(std::string(),
-                                           mojo::GetProxy(&mojo_renderer));
+    media_interface_factory_->CreateRenderer(std::string(),
+                                             mojo::GetProxy(&mojo_renderer));
 
     return base::MakeUnique<MojoRenderer>(message_loop_.task_runner(),
                                           std::move(mojo_renderer));
   }
 
  private:
-  mojom::ServiceFactoryPtr media_service_factory_;
+  mojom::InterfaceFactoryPtr media_interface_factory_;
 };
 #else
 class PipelineIntegrationTestHost : public testing::Test,
@@ -1156,11 +1167,7 @@ TEST_F(PipelineIntegrationTest, BasicPlaybackLive) {
 
   EXPECT_HASH_EQ("f0be120a90a811506777c99a2cdf7cc1", GetVideoHash());
   EXPECT_HASH_EQ("-3.59,-2.06,-0.43,2.15,0.77,-0.95,", GetAudioHash());
-
-  // TODO: Fix FFmpeg code to return higher resolution time values so
-  // we don't have to truncate our expectations here.
-  EXPECT_EQ(TruncateToFFmpegTimeResolution(kLiveTimelineOffset()),
-            demuxer_->GetTimelineOffset());
+  EXPECT_EQ(kLiveTimelineOffset(), demuxer_->GetTimelineOffset());
 }
 
 TEST_F(PipelineIntegrationTest, S32PlaybackHashed) {
@@ -1192,6 +1199,14 @@ TEST_F(PipelineIntegrationTest, MAYBE_EME(BasicPlaybackEncrypted)) {
 
   ASSERT_TRUE(WaitUntilOnEnded());
   Stop();
+}
+
+TEST_F(PipelineIntegrationTest, FlacPlaybackHashed) {
+  ASSERT_EQ(PIPELINE_OK, Start("sfx.flac", kHashed));
+  Play();
+  ASSERT_TRUE(WaitUntilOnEnded());
+  EXPECT_HASH_EQ(std::string(kNullVideoHash), GetVideoHash());
+  EXPECT_HASH_EQ("3.03,2.86,2.99,3.31,3.57,4.06,", GetAudioHash());
 }
 
 TEST_F(PipelineIntegrationTest, BasicPlayback_MediaSource) {
@@ -1532,6 +1547,18 @@ TEST_F(PipelineIntegrationTest, BasicPlaybackHi10P) {
   ASSERT_TRUE(WaitUntilOnEnded());
 }
 
+TEST_F(PipelineIntegrationTest, BasicFallback) {
+  ScopedVector<VideoDecoder> failing_video_decoder;
+  failing_video_decoder.push_back(new FailingVideoDecoder());
+
+  ASSERT_EQ(PIPELINE_OK,
+            Start("bear.mp4", kClockless, std::move(failing_video_decoder)));
+
+  Play();
+
+  ASSERT_TRUE(WaitUntilOnEnded());
+};
+
 TEST_F(PipelineIntegrationTest, MediaSource_ADTS) {
   MockMediaSource source("sfx.adts", kADTS, kAppendWholeFile);
   EXPECT_EQ(PIPELINE_OK, StartPipelineWithMediaSource(&source));
@@ -1574,7 +1601,7 @@ TEST_F(PipelineIntegrationTest, MediaSource_ADTS_TimestampOffset) {
   EXPECT_EQ(592, pipeline_->GetBufferedTimeRanges().end(0).InMilliseconds());
 
   // Verify preroll is stripped.
-  EXPECT_HASH_EQ("-0.06,0.97,-0.90,-0.70,-0.53,-0.34,", GetAudioHash());
+  EXPECT_HASH_EQ("-0.25,0.67,0.04,0.14,-0.49,-0.41,", GetAudioHash());
 }
 
 TEST_F(PipelineIntegrationTest, BasicPlaybackHashed_MP3) {
@@ -1980,21 +2007,25 @@ TEST_F(PipelineIntegrationTest,
   Stop();
 }
 
-#if BUILDFLAG(ENABLE_MSE_MPEG2TS_STREAM_PARSER)
 TEST_F(PipelineIntegrationTest, Mp2ts_AAC_HE_SBR_Audio) {
   MockMediaSource source("bear-1280x720-aac_he.ts", kMP2AudioSBR,
                          kAppendWholeFile);
+#if BUILDFLAG(ENABLE_MSE_MPEG2TS_STREAM_PARSER)
   EXPECT_EQ(PIPELINE_OK, StartPipelineWithMediaSource(&source));
-
   source.EndOfStream();
   ASSERT_EQ(PIPELINE_OK, pipeline_status_);
 
-  // When SBR is not taken into account correctly by mpeg2ts parser, it will
-  // estimate audio frame durations incorrectly and that will lead to gaps in
-  // buffered ranges (so this check will fail) and stalled playback.
+  // Check that SBR is taken into account correctly by mpeg2ts parser. When an
+  // SBR stream is parsed as non-SBR stream, then audio frame durations are
+  // calculated incorrectly and that leads to gaps in buffered ranges (so this
+  // check will fail) and eventually leads to stalled playback.
   EXPECT_EQ(1u, pipeline_->GetBufferedTimeRanges().size());
-}
+#else
+  EXPECT_EQ(
+      DEMUXER_ERROR_COULD_NOT_OPEN,
+      StartPipelineWithMediaSource(&source, kExpectDemuxerFailure, nullptr));
 #endif
+}
 
 TEST_F(PipelineIntegrationTest,
        MAYBE_EME(EncryptedPlayback_NoEncryptedFrames_MP4_CENC_AudioOnly)) {
@@ -2017,6 +2048,28 @@ TEST_F(PipelineIntegrationTest,
        MAYBE_EME(EncryptedPlayback_MP4_CENC_SENC_Video)) {
   MockMediaSource source("bear-640x360-v_frag-cenc-senc.mp4", kMP4Video,
                          kAppendWholeFile);
+  FakeEncryptedMedia encrypted_media(new KeyProvidingApp());
+  EXPECT_EQ(PIPELINE_OK,
+            StartPipelineWithEncryptedMedia(&source, &encrypted_media));
+
+  source.EndOfStream();
+
+  Play();
+
+  ASSERT_TRUE(WaitUntilOnEnded());
+  source.Shutdown();
+  Stop();
+}
+
+// 'SAIZ' and 'SAIO' boxes contain redundant information which is already
+// available in 'SENC' box. Although 'SAIZ' and 'SAIO' boxes are required per
+// CENC spec for backward compatibility reasons, but we do not use the two
+// boxes if 'SENC' box is present, so the code should work even if the two
+// boxes are not present.
+TEST_F(PipelineIntegrationTest,
+       MAYBE_EME(EncryptedPlayback_MP4_CENC_SENC_NO_SAIZ_SAIO_Video)) {
+  MockMediaSource source("bear-640x360-v_frag-cenc-senc-no-saiz-saio.mp4",
+                         kMP4Video, kAppendWholeFile);
   FakeEncryptedMedia encrypted_media(new KeyProvidingApp());
   EXPECT_EQ(PIPELINE_OK,
             StartPipelineWithEncryptedMedia(&source, &encrypted_media));

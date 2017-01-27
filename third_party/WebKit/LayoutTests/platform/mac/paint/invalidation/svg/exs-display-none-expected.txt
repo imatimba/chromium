@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -29,11 +27,6 @@
           "reason": "layoutObject insertion"
         },
         {
-          "object": "LayoutSVGRoot svg",
-          "rect": [50, 50, 571, 82],
-          "reason": "became visible"
-        },
-        {
           "object": "LayoutSVGTSpan tspan",
           "rect": [50, 50, 571, 82],
           "reason": "layoutObject insertion"
@@ -52,10 +45,6 @@
     }
   ],
   "objectPaintInvalidations": [
-    {
-      "object": "LayoutSVGRoot svg",
-      "reason": "became visible"
-    },
     {
       "object": "LayoutSVGContainer g",
       "reason": "became visible"

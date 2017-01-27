@@ -12,7 +12,7 @@
             {
                 var v = document.createElement('video');
                 v.src = findMediaFile('video', 'content/test');
-                v.disableRemotePlayback = true
+                v.disableRemotePlayback = true;
                 document.body.appendChild(v);
 
                 return promise_rejects(

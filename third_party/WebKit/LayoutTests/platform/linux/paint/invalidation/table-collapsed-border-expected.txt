@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -106,11 +104,6 @@
         {
           "object": "LayoutTable TABLE",
           "rect": [74, 286, 29, 82],
-          "reason": "incremental"
-        },
-        {
-          "object": "LayoutTable TABLE",
-          "rect": [78, 286, 25, 82],
           "reason": "incremental"
         },
         {

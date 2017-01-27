@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -11,7 +9,7 @@
         {
           "object": "LayoutBlockFlow (positioned) DIV id='skewed'",
           "rect": [0, 50, 700, 500],
-          "reason": "bounds change"
+          "reason": "border box change"
         }
       ]
     }
@@ -19,7 +17,7 @@
   "objectPaintInvalidations": [
     {
       "object": "LayoutBlockFlow (positioned) DIV id='skewed'",
-      "reason": "bounds change"
+      "reason": "border box change"
     }
   ]
 }

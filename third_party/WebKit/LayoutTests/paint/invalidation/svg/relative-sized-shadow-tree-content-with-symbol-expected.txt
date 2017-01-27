@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -58,22 +56,6 @@
     {
       "object": "LayoutSVGRoot svg",
       "reason": "forced by layout"
-    },
-    {
-      "object": "LayoutSVGHiddenContainer defs",
-      "reason": "location change"
-    },
-    {
-      "object": "LayoutSVGHiddenContainer symbol id='targetSymbol'",
-      "reason": "location change"
-    },
-    {
-      "object": "LayoutSVGRect rect",
-      "reason": "location change"
-    },
-    {
-      "object": "LayoutSVGRect rect",
-      "reason": "location change"
     },
     {
       "object": "LayoutSVGContainer use",

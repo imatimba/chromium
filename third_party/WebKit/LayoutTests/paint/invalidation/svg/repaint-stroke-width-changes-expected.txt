@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -10,22 +8,13 @@
       "paintInvalidations": [
         {
           "object": "LayoutSVGRect rect",
-          "rect": [10, 10, 460, 340],
+          "rect": [9, 9, 462, 342],
           "reason": "style change"
-        },
-        {
-          "object": "LayoutSVGRoot svg",
-          "rect": [10, 10, 460, 340],
-          "reason": "bounds change"
         }
       ]
     }
   ],
   "objectPaintInvalidations": [
-    {
-      "object": "LayoutSVGRoot svg",
-      "reason": "bounds change"
-    },
     {
       "object": "LayoutSVGRect rect",
       "reason": "style change"

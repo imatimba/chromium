@@ -14,7 +14,6 @@
 #include "ash/common/accessibility_types.h"
 #include "ash/common/metrics/user_metrics_action.h"
 #include "ash/common/shelf/wm_shelf.h"
-#include "ash/common/shell_window_ids.h"
 #include "ash/common/wm/mru_window_tracker.h"
 #include "ash/common/wm/overview/window_grid.h"
 #include "ash/common/wm/overview/window_selector_delegate.h"
@@ -27,6 +26,7 @@
 #include "ash/common/wm_root_window_controller.h"
 #include "ash/common/wm_shell.h"
 #include "ash/common/wm_window.h"
+#include "ash/public/cpp/shell_window_ids.h"
 #include "base/auto_reset.h"
 #include "base/command_line.h"
 #include "base/metrics/histogram.h"
@@ -97,7 +97,7 @@ struct WindowSelectorItemTargetComparator {
       : target(target_window) {}
 
   bool operator()(WindowSelectorItem* window) const {
-    return window->GetWindow() == target;
+    return window->Contains(target);
   }
 
   const WmWindow* target;
@@ -203,7 +203,7 @@ views::Widget* CreateTextFilter(views::TextfieldController* controller,
 
   views::Textfield* textfield = new views::Textfield;
   textfield->set_controller(controller);
-  textfield->SetBorder(views::Border::NullBorder());
+  textfield->SetBorder(views::NullBorder());
   textfield->SetBackgroundColor(kTextFilterBackgroundColor);
   textfield->SetTextColor(kTextFilterTextColor);
   views::ImageView* image_view = new views::ImageView;
@@ -567,10 +567,8 @@ void WindowSelector::OnWindowActivated(WmWindow* gained_active,
   auto iter = std::find_if(windows.begin(), windows.end(),
                            WindowSelectorItemTargetComparator(gained_active));
 
-  if (iter != windows.end()) {
-    (*iter)->ShowWindowOnExit();
-  } else if (showing_text_filter_ &&
-             lost_active == GetTextFilterWidgetWindow()) {
+  if (iter == windows.end() && showing_text_filter_ &&
+      lost_active == GetTextFilterWidgetWindow()) {
     return;
   }
 

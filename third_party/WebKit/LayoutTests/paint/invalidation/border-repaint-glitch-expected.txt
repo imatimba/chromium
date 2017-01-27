@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -16,16 +14,6 @@
         {
           "object": "LayoutBlockFlow DIV",
           "rect": [19, 241, 200, 24],
-          "reason": "incremental"
-        },
-        {
-          "object": "LayoutBlockFlow DIV",
-          "rect": [19, 405, 200, 20],
-          "reason": "incremental"
-        },
-        {
-          "object": "LayoutBlockFlow DIV",
-          "rect": [19, 245, 200, 20],
           "reason": "incremental"
         },
         {

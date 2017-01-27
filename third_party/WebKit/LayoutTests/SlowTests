@@ -1,4 +1,5 @@
-# See http://www.chromium.org/developers/testing/webkit-layout-tests/testexpectations for more information on this file.
+# See //docs/testing/layout_test_expectations.md
+# for more information on this file.
 
 # This file should only mark tests as Slow. If they are failing in some other way, that listing should be in TestExpectations.
 # Lines listed in both files will have the *union* of the expectations.
@@ -23,7 +24,6 @@ crbug.com/24182 editing/selection/modify_move/move-by-word-visually-crash-test-5
 crbug.com/24182 fast/dom/SelectorAPI/resig-SelectorsAPI-test.xhtml [ Slow ]
 crbug.com/24182 fast/frames/cached-frame-counter.html [ Slow ]
 crbug.com/24182 fast/frames/frame-limit.html [ Slow ]
-crbug.com/24182 fast/images/png-suite/test.html [ Slow ]
 crbug.com/24182 fast/overflow/lots-of-sibling-inline-boxes.html [ Slow ] # Particularly slow in Debug: >12x slower!
 crbug.com/24182 http/tests/accessibility/slow-document-load.html [ Slow ]
 crbug.com/24182 http/tests/cache/subresource-expiration-1.html [ Slow ]
@@ -37,6 +37,7 @@ crbug.com/24182 http/tests/navigation/slowtimerredirect-basic.html [ Slow ]
 crbug.com/24182 http/tests/storage/callbacks-are-called-in-correct-context.html [ Slow ]
 crbug.com/24182 http/tests/xmlhttprequest/timeout/xmlhttprequest-timeout-aborted.html [ Slow ]
 crbug.com/24182 http/tests/notifications/close-dispatch-asynchronous.html [ Slow ]
+crbug.com/24182 images/png-suite/test.html [ Slow ]
 crbug.com/24182 jquery/attributes.html [ Slow ]
 crbug.com/24182 jquery/core.html [ Slow ]
 crbug.com/24182 jquery/css.html [ Slow ]
@@ -79,6 +80,7 @@ crbug.com/24182 svg/hixie/perf/003.xml [ Slow ]
 crbug.com/24182 svg/hixie/perf/004.xml [ Slow ]
 crbug.com/24182 svg/hixie/perf/005.xml [ Slow ]
 crbug.com/24182 svg/hixie/perf/006.xml [ Slow ]
+crbug.com/659457 [ Linux Debug ] fast/mediacapturefromelement/HTMLMediaElementCapture-capture.html [ Slow ]
 crbug.com/451577 [ Debug ] fast/dom/gc-treescope.html  [ Slow ]
 crbug.com/451577 [ Debug ] fast/frames/calculate-round.html [ Slow ]
 crbug.com/451577 imported/wpt/IndexedDB/idbindex-multientry-big.htm [ Slow ]
@@ -110,7 +112,6 @@ crbug.com/420008 virtual/threaded/inspector/tracing/ [ Slow ]
 crbug.com/246190 [ Release ] http/tests/inspector/indexeddb/ [ Slow ]
 crbug.com/451577 [ Mac ] inspector/extensions/extensions-sidebar.html [ Slow ]
 crbug.com/451577 [ Mac ] inspector/extensions/extensions-events.html [ Slow ]
-crbug.com/450493 virtual/asyncawait/inspector/sources/debugger-async/ [ Slow ]
 
 # Random slow tests
 webkit.org/b/90488 [ Release ] http/tests/inspector/compiler-source-mapping-debug.html [ Slow ]
@@ -158,6 +159,7 @@ crbug.com/258896 animations/animation-direction-reverse-fill-mode.html [ Slow ]
 
 # This test has to generate >250MB of data which takes ~6s in both release and debug.
 crbug.com/420240 http/tests/xmlhttprequest/xmlhttprequest-json-response-overflow.html [ Slow ]
+crbug.com/420240 virtual/mojo-loading/http/tests/xmlhttprequest/xmlhttprequest-json-response-overflow.html [ Slow ]
 
 # These html5lib tests are generated tests that test a huge amount of permutations so they need a bit more time.
 crbug.com/453312 html5lib/generated/run-doctype01-data.html [ Slow ]
@@ -191,11 +193,16 @@ crbug.com/490511 imported/wpt/html/syntax/parsing/html5lib_tests19.html [ Slow ]
 crbug.com/490511 imported/wpt/html/syntax/parsing/html5lib_tests2.html [ Slow ]
 crbug.com/490511 imported/wpt/html/syntax/parsing/html5lib_tests20.html [ Slow ]
 
+crbug.com/490939 imported/wpt/dom/ranges/Range-cloneContents.html [ Slow ]
 crbug.com/490939 imported/wpt/dom/ranges/Range-compareBoundaryPoints.html [ Slow ]
 crbug.com/490939 imported/wpt/dom/ranges/Range-comparePoint.html [ Slow ]
+crbug.com/490939 imported/wpt/dom/ranges/Range-deleteContents.html [ Slow ]
+crbug.com/490939 imported/wpt/dom/ranges/Range-extractContents.html [ Slow ]
+crbug.com/490939 imported/wpt/dom/ranges/Range-insertNode.html [ Slow ]
 crbug.com/490939 imported/wpt/dom/ranges/Range-isPointInRange.html [ Slow ]
-crbug.com/490939 [ Release ] imported/wpt/dom/ranges/Range-mutations.html [ Slow ]
+crbug.com/490939 imported/wpt/dom/ranges/Range-mutations-dataChange.html [ Slow ]
 crbug.com/490939 imported/wpt/dom/ranges/Range-set.html [ Slow ]
+crbug.com/490939 imported/wpt/dom/ranges/Range-surroundContents.html [ Slow ]
 crbug.com/490939 imported/wpt/html/dom/reflection-embedded.html [ Slow ]
 crbug.com/490939 imported/wpt/html/dom/reflection-forms.html [ Slow ]
 crbug.com/490939 imported/wpt/html/dom/reflection-grouping.html [ Slow ]
@@ -218,7 +225,7 @@ crbug.com/231721 svg/custom/invisible-text-after-scrolling.xhtml [ Slow ]
 crbug.com/237270 [ Win7 ] fast/css/custom-font-xheight.html [ Slow ]
 crbug.com/241576 [ Win ] http/tests/appcache/404-manifest.html [ Slow ]
 crbug.com/241869 [ Debug ] css3/flexbox/multiline-justify-content.html [ Slow ]
-crbug.com/243249 http/tests/misc/submit-post-keygen.html [ Slow ]
+crbug.com/520189 http/tests/misc/submit-post-keygen.html [ Slow ]
 crbug.com/245154 editing/selection/modify_move/move-by-character-brute-force.html [ Slow ]
 crbug.com/246749 inspector/extensions/extensions-panel.html [ Slow ]
 
@@ -244,11 +251,8 @@ crbug.com/492664 imported/csswg-test/css-writing-modes-3/text-orientation-script
 
 crbug.com/336481 inspector/jump-to-previous-editing-location.html [ Slow ]
 crbug.com/490511 imported/wpt/html/rendering/replaced-elements/svg-embedded-sizing/ [ Slow ]
-crbug.com/490511 imported/wpt/html/semantics/embedded-content/media-elements/playing-the-media-resource/pause-remove-from-document-networkState.html [ Slow ]
 crbug.com/490511 imported/wpt/html/semantics/forms/textfieldselection/selection.html [ Slow ]
 crbug.com/346259 http/tests/websocket/no-crash-on-cookie-flood.html [ Slow ]
-
-crbug.com/358313 virtual/gpu/fast/canvas/webgl/webgl-large-texture.html [ Slow ]
 
 crbug.com/522646 http/tests/media/encrypted-media/encrypted-media-encrypted-event-different-origin.html [ Slow ]
 crbug.com/411164 [ Win ] http/tests/security/powerfulFeatureRestrictions/serviceworker-on-insecure-origin.html [ Slow ]
@@ -299,6 +303,8 @@ crbug.com/552556 [ Win Linux ] virtual/threaded/fast/scroll-behavior/overflow-sc
 crbug.com/570656 [ Mac ] fast/writing-mode/Kusa-Makura-background-canvas.html [ Slow ]
 crbug.com/570656 [ Mac ] fast/text/unicode-fallback-font.html [ Slow ]
 
+crbug.com/658211 [ Win7 Debug ] fast/text/line-break-ascii.html [ Slow ]
+
 crbug.com/445194 fast/dom/shadow/focus-controller-recursion-crash.html [ Slow ]
 
 crbug.com/584807 printing/webgl-oversized-printing.html [ Slow ]
@@ -306,22 +312,33 @@ crbug.com/584807 virtual/threaded/printing/webgl-oversized-printing.html [ Slow 
 
 crbug.com/592183 usb/usbDevice.html [ Slow ]
 
+crbug.com/658318 [ Win Debug ] fast/forms/time-multiple-fields/time-multiple-fields-stepup-stepdown-from-renderer-hour.html [ Slow ]
+
 crbug.com/594189 virtual/spv2/fast/overflow/lots-of-sibling-inline-boxes.html [ Slow ]
 
 crbug.com/611442 imported/wpt/quirks-mode/hashless-hex-color.html [ Slow ]
 
-crbug.com/614910 virtual/gpu-rasterization/fast/images/pixel-crack-image-background-webkit-transform-scale.html [ Slow ]
-crbug.com/614910 virtual/gpu-rasterization/fast/images/color-profile-filter.html [ Slow ]
+crbug.com/614910 virtual/gpu-rasterization/images/pixel-crack-image-background-webkit-transform-scale.html [ Slow ]
+crbug.com/614910 virtual/gpu-rasterization/images/color-profile-filter.html [ Slow ]
 
 crbug.com/623798 paint/images/animated-gif-last-frame-crash.html [ Slow ]
 
 crbug.com/606649 fast/dom/gc-dom-tree-lifetime.html [ Slow ]
 
-crbug.com/647192 fast/css3-text/css3-word-break/word-break-all-ascii.html [ Slow ]
-crbug.com/647192 virtual/mojo-loading/webexposed/global-interface-listing.html [ Slow ]
+# Slow on Win Debug in part due to incremental linking.
+crbug.com/647192 [ Win Debug ] fast/css3-text/css3-word-break/word-break-all-ascii.html [ Slow ]
+crbug.com/647192 [ Win Debug ] virtual/mojo-loading/webexposed/global-interface-listing.html [ Slow ]
+crbug.com/647192 [ Win Debug ] virtual/stable/webexposed/global-interface-listing.html [ Slow ]
+crbug.com/647192 [ Win Debug ] webexposed/global-interface-listing.html [ Slow ]
 
 # These tests are slow with our MESA backend. They may be less slow when we have
 # bots running tests on real hardware or maybe when using SwiftShader.
 crbug.com/646528 compositing/lots-of-img-layers.html [ Slow ]
 crbug.com/646528 compositing/lots-of-img-layers-with-opacity.html [ Slow ]
 
+# IDB Observer tests require multiple browsing contexts/workers interacting with
+# IndexedDB, which can be slow.
+crbug.com/660468 [ Linux ] storage/indexeddb/observer-frame.html [ Slow ]
+crbug.com/660468 [ Linux ] storage/indexeddb/observer-workers.html [ Slow ]
+
+crbug.com/660492 [ Linux ] storage/indexeddb/structured-clone.html [ Slow ]

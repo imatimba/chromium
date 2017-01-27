@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -26,7 +24,7 @@
         {
           "object": "LayoutSVGRect rect id='targetRect'",
           "rect": [209, 273, 200, 200],
-          "reason": "bounds change"
+          "reason": "forced by layout"
         },
         {
           "object": "LayoutSVGRoot svg",
@@ -41,12 +39,12 @@
         {
           "object": "LayoutSVGRect rect id='targetRect'",
           "rect": [109, 173, 200, 200],
-          "reason": "bounds change"
+          "reason": "forced by layout"
         },
         {
           "object": "LayoutSVGRect rect id='targetRect'",
           "rect": [9, 173, 200, 200],
-          "reason": "full"
+          "reason": "forced by layout"
         },
         {
           "object": "LayoutSVGContainer g id='targetUse'",
@@ -61,7 +59,7 @@
         {
           "object": "LayoutSVGRect rect id='targetRect'",
           "rect": [59, 273, 50, 200],
-          "reason": "bounds change"
+          "reason": "forced by layout"
         },
         {
           "object": "LayoutSVGRoot svg",
@@ -76,7 +74,7 @@
         {
           "object": "LayoutSVGRect rect id='targetRect'",
           "rect": [34, 173, 50, 200],
-          "reason": "bounds change"
+          "reason": "forced by layout"
         }
       ]
     }
@@ -95,12 +93,8 @@
       "reason": "forced by layout"
     },
     {
-      "object": "LayoutSVGHiddenContainer defs",
-      "reason": "location change"
-    },
-    {
       "object": "LayoutSVGRect rect id='targetRect'",
-      "reason": "full"
+      "reason": "forced by layout"
     },
     {
       "object": "LayoutSVGContainer use id='targetUse'",
@@ -108,7 +102,7 @@
     },
     {
       "object": "LayoutSVGRect rect id='targetRect'",
-      "reason": "bounds change"
+      "reason": "forced by layout"
     },
     {
       "object": "LayoutSVGContainer use",
@@ -120,7 +114,7 @@
     },
     {
       "object": "LayoutSVGRect rect id='targetRect'",
-      "reason": "bounds change"
+      "reason": "forced by layout"
     }
   ]
 }

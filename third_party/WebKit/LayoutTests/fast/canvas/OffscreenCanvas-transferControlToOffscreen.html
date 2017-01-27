@@ -28,23 +28,20 @@ test(function() {
 }, "Tests whether transferControlToOffscreen can be run correctly.");
 
 test(function() {
-    var canvas2 = createCanvas(50, 50);
-    var offscreenCanvas2;
-    var ctx = canvas2.getContext("2d");
+    var canvas2a = createCanvas(50, 50);
+    var offscreenCanvas2a;
+    var ctx = canvas2a.getContext("2d");
     assert_throws("InvalidStateError", function() {
-        offscreenCanvas2 = canvas2.transferControlToOffscreen();
+        offscreenCanvas2a = canvas2a.transferControlToOffscreen();
         assert_false("transferControlToOffscreen from a canvas with context didn't throw an exception.");
     }, "transferControlToOffscreen from a canvas with context throws an exception");
-}, "Tests whether transferControlToOffscreen throws exception correctly."); 
 
-test(function() {
-    var canvas3 = createCanvas(10, 10);
-    var offscreenCanvas3 = canvas3.transferControlToOffscreen();
-    assert_equals(offscreenCanvas3.width, 10);
-    assert_equals(offscreenCanvas3.height, 10);
-    assert_throws("InvalidStateError", function() { offscreenCanvas3.width = 20; });
-    assert_throws("InvalidStateError", function() { offscreenCanvas3.height = 20; });
-}, "Test if resizing on offscreencanvas transferred from html canvas has thrown exceptions.");
+    var canvas2b = createCanvas(10, 10);
+    var offscreenCanvas2b = canvas2b.transferControlToOffscreen();
+    assert_throws("InvalidStateError", function() {
+        var anotherOffscreenCanvas = canvas2b.transferControlToOffscreen();
+    }, "canvas.transferControlToOffscreen() is not allowed to called more than once for the same canvas.");
+}, "Tests whether transferControlToOffscreen throws exception correctly."); 
 
 test(function() {
     var canvas4 = createCanvas(10, 10);
@@ -58,12 +55,6 @@ test(function() {
     assert_throws("InvalidStateError", function() {
         canvas4.width = 20;
     }, "canvas resizing width is not allowed after transferring control to offscreen.");
-    assert_throws("InvalidStateError", function() {
-        canvas4.toBlob(function() {});
-    }, "canvas.toBlob is not allowed after transferring control to offscreen.");
-    assert_throws("InvalidStateError", function() {
-        canvas4.toDataURL();
-    }, "canvas.toDataURL is not allowed after transferring control to offscreen.");
 }, "Test if modifying canvas after it transfers controls to offscreen throw exceptions");
 
 </script>

@@ -2,7 +2,6 @@
 // time.
 window.testIsAsync = false;
 window.outputRepaintRects = true;
-window.outputLayerList = false;
 
 // All repaint tests are asynchronous.
 if (window.testRunner)
@@ -16,6 +15,8 @@ if (window.internals) {
 // Add string names of objects that should be invalidated here. If you use this feature,
 // you must also include testharness.js.
 window.expectedObjectInvalidations = [];
+// Objects which must *not* be invalidated.
+window.expectedObjectNonInvalidations = [];
 
 function runRepaintTest()
 {
@@ -64,6 +65,10 @@ function checkObjectPaintInvalidations(layersWithInvalidationsText)
     window.expectedObjectInvalidations.forEach(function(objectName) {
         assert_true(objectNameSet.has(objectName), "Expected object to be invalidated, but it was not: '" + objectName + "'");
     });
+
+    window.expectedObjectNonInvalidations.forEach(function(objectName) {
+        assert_false(objectNameSet.has(objectName), "Expected object to *not* be invalidated, but it was: '" + objectName + "'");
+    });
 }
 
 function finishRepaintTest()
@@ -78,9 +83,6 @@ function finishRepaintTest()
 
     if (window.layerTreeAsTextAdditionalFlags)
         flags |= window.layerTreeAsTextAdditionalFlags;
-
-    if (window.outputLayerList)
-        flags |= window.internals.OUTPUT_CHILDREN_AS_LAYER_LIST;
 
     var layersWithInvalidationsText = window.internals.layerTreeAsText(document, flags);
 

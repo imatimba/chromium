@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -10,7 +8,7 @@
       "paintInvalidations": [
         {
           "object": "LayoutSVGPath polygon",
-          "rect": [137, 37, 580, 563],
+          "rect": [136, 36, 582, 565],
           "reason": "style change"
         },
         {
@@ -35,27 +33,27 @@
         },
         {
           "object": "LayoutSVGPath polygon",
-          "rect": [456, 166, 133, 132],
+          "rect": [455, 165, 135, 134],
           "reason": "style change"
         },
         {
           "object": "LayoutSVGPath polygon id='t3'",
-          "rect": [320, 166, 133, 132],
+          "rect": [319, 165, 135, 134],
           "reason": "style change"
         },
         {
           "object": "LayoutSVGPath polygon",
-          "rect": [47, 166, 133, 132],
+          "rect": [46, 165, 135, 134],
+          "reason": "style change"
+        },
+        {
+          "object": "LayoutSVGPath polygon",
+          "rect": [183, 165, 134, 134],
           "reason": "style change"
         },
         {
           "object": "LayoutSVGViewportContainer svg id='poly'",
           "rect": [47, 166, 133, 132],
-          "reason": "style change"
-        },
-        {
-          "object": "LayoutSVGPath polygon",
-          "rect": [184, 166, 132, 132],
           "reason": "style change"
         },
         {
@@ -65,7 +63,7 @@
         },
         {
           "object": "LayoutSVGEllipse circle id='t4'",
-          "rect": [46, 28, 7, 7],
+          "rect": [45, 27, 9, 9],
           "reason": "style change"
         }
       ]
@@ -118,7 +116,7 @@
     },
     {
       "object": "LayoutSVGViewportContainer svg id='poly2'",
-      "reason": "location change"
+      "reason": "SVG resource change"
     },
     {
       "object": "LayoutSVGPath polygon",

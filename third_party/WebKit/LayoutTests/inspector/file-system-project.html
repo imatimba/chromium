@@ -71,14 +71,14 @@ function test()
             fs1.reportCreated(function() {});
             fs2.reportCreated(function() {});
 
-            WebInspector.workspace.addEventListener(WebInspector.Workspace.Events.UISourceCodeAdded, onUISourceCode);
+            Workspace.workspace.addEventListener(Workspace.Workspace.Events.UISourceCodeAdded, onUISourceCode);
 
             var count = 3;
             function onUISourceCode()
             {
                 if (--count)
                     return;
-                WebInspector.workspace.removeEventListener(WebInspector.Workspace.Events.UISourceCodeAdded, onUISourceCode);
+                Workspace.workspace.removeEventListener(Workspace.Workspace.Events.UISourceCodeAdded, onUISourceCode);
                 onUISourceCodesLoaded();
             }
 
@@ -93,7 +93,7 @@ function test()
             function uiSourceCodesDumped()
             {
                 dumpUISourceCodeLocations(uiSourceCodes, 5);
-                WebInspector.workspace.addEventListener(WebInspector.Workspace.Events.WorkingCopyCommitted, contentCommitted, this);
+                Workspace.workspace.addEventListener(Workspace.Workspace.Events.WorkingCopyCommitted, contentCommitted, this);
                 uiSourceCodes[0].addRevision("<Modified UISourceCode content>");
             }
 
@@ -127,7 +127,7 @@ function test()
 
         function testExcludesSettings(next)
         {
-            WebInspector.settings.createLocalSetting("workspaceExcludedFolders", {}).set({"file:///var/www2":["/html/"]});
+            Common.settings.createLocalSetting("workspaceExcludedFolders", {}).set({"file:///var/www2":["/html/"]});
             createFileSystem("file:///var/www2", dumpExcludes);
 
             function dumpExcludes(fs)
@@ -195,7 +195,68 @@ function test()
                 fs.reportRemoved();
                 next();
             }
-        }
+        },
+
+        function testGitFolders(next)
+        {
+            var fs = new InspectorTest.TestFileSystem("file:///var/www3");
+            var project1 = fs.root.mkdir("project_1");
+            project1.mkdir(".git").addFile("foo.git");
+            var project2 = fs.root.mkdir("project_2");
+            project2.mkdir(".git").addFile("bar.git");
+            var project3 = fs.root.mkdir("project_3");
+            project3.mkdir(".svn").addFile("baz.svn");
+            var project4 = fs.root.mkdir("project_4");
+            project4.addFile("index.html");
+            fs.reportCreated(dumpGitFolders);
+
+            function dumpGitFolders()
+            {
+                var isolatedFileSystem = Workspace.isolatedFileSystemManager.fileSystem("file:///var/www3");
+                var folders = isolatedFileSystem.gitFolders();
+                folders.sort();
+                for (var gitFolder of folders)
+                    InspectorTest.addResult(gitFolder);
+                fs.reportRemoved();
+                next();
+            }
+        },
+
+        function testUISourceCodeMetadata(next)
+        {
+            var fs = new InspectorTest.TestFileSystem("file:///var/www3");
+            var file = fs.root.mkdir("test").addFile("hello.js", "123456");
+            fs.reportCreated(function() { });
+            InspectorTest.waitForScriptSource("hello.js", onUISourceCode);
+            var uiSourceCode;
+
+            function onUISourceCode(sourceCode)
+            {
+                uiSourceCode = sourceCode;
+                uiSourceCode.requestMetadata().then(onInitialMetadata);
+            }
+
+            function onInitialMetadata(metadata)
+            {
+                dumpMetadata("Initial metadata", metadata);
+                file.setContent("changed content");
+                uiSourceCode.requestMetadata().then(onChangedMetadata);
+            }
+
+            function onChangedMetadata(metadata)
+            {
+                dumpMetadata("Changed metadata", metadata);
+                fs.reportRemoved();
+                next();
+            }
+
+            function dumpMetadata(label, metadata)
+            {
+                InspectorTest.addResult(label);
+                InspectorTest.addResult("    content size: " + metadata.contentSize);
+                InspectorTest.addResult("    modification time: " + metadata.modificationTime.toISOString());
+            }
+        },
     ]);
 };
 </script>

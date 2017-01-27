@@ -474,10 +474,11 @@ interface NotificationEvent : ExtendableEvent
     getter notification
     getter reply
     method constructor
-interface OffscreenCanvas
+interface OffscreenCanvas : EventTarget
     getter height
     getter width
     method constructor
+    method convertToBlob
     method getContext
     method transferToImageBitmap
     setter height
@@ -648,6 +649,7 @@ interface ServiceWorkerRegistration : EventTarget
     getter active
     getter installing
     getter onupdatefound
+    getter paymentAppManager
     getter pushManager
     getter scope
     getter sync
@@ -1253,6 +1255,11 @@ interface WorkerNavigator
     getter storage
     getter userAgent
     method constructor
+interface WritableStream
+    getter locked
+    method abort
+    method constructor
+    method getWriter
 interface webkitIDBCursor
     getter direction
     getter key

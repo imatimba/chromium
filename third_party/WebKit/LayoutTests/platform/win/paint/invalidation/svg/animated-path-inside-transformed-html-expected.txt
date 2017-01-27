@@ -1,7 +1,5 @@
 {
-  "name": "Content Root Layer",
-  "bounds": [800, 600],
-  "children": [
+  "layers": [
     {
       "name": "LayoutView #document",
       "bounds": [800, 600],
@@ -10,16 +8,6 @@
       "backgroundColor": "#FFFFFF",
       "paintInvalidations": [
         {
-          "object": "LayoutSVGRoot svg",
-          "rect": [187, 104, 310, 390],
-          "reason": "bounds change"
-        },
-        {
-          "object": "LayoutSVGRoot svg",
-          "rect": [90, 83, 275, 248],
-          "reason": "bounds change"
-        },
-        {
           "object": "LayoutSVGInlineText #text",
           "rect": [203, 334, 121, 44],
           "reason": "forced by layout"
@@ -41,12 +29,12 @@
         },
         {
           "object": "LayoutSVGRect rect id='rect'",
-          "rect": [355, 126, 103, 101],
+          "rect": [354, 125, 105, 103],
           "reason": "full"
         },
         {
           "object": "LayoutSVGRect rect id='rect'",
-          "rect": [111, 83, 101, 100],
+          "rect": [110, 82, 103, 102],
           "reason": "full"
         },
         {
@@ -63,10 +51,6 @@
     }
   ],
   "objectPaintInvalidations": [
-    {
-      "object": "LayoutSVGRoot svg",
-      "reason": "bounds change"
-    },
     {
       "object": "LayoutSVGRect rect id='rect'",
       "reason": "full"

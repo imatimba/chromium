@@ -13,8 +13,6 @@
 #include "base/memory/ptr_util.h"
 #include "base/strings/sys_string_conversions.h"
 #import "chrome/browser/certificate_viewer.h"
-#include "chrome/browser/devtools/devtools_toggle_action.h"
-#include "chrome/browser/devtools/devtools_window.h"
 #include "chrome/browser/infobars/infobar_service.h"
 #include "chrome/browser/profiles/profile.h"
 #include "chrome/browser/ui/browser_dialogs.h"
@@ -25,12 +23,10 @@
 #import "chrome/browser/ui/cocoa/website_settings/permission_selector_button.h"
 #import "chrome/browser/ui/tab_dialogs.h"
 #include "chrome/browser/ui/website_settings/permission_menu_model.h"
-#include "chrome/common/pref_names.h"
 #include "chrome/common/url_constants.h"
 #include "chrome/grit/chromium_strings.h"
 #include "chrome/grit/generated_resources.h"
 #include "chrome/grit/theme_resources.h"
-#include "components/prefs/pref_service.h"
 #include "components/strings/grit/components_chromium_strings.h"
 #include "components/strings/grit/components_strings.h"
 #include "content/public/browser/page_navigator.h"
@@ -188,6 +184,7 @@ NSPoint AnchorPointForWindow(NSWindow* parent) {
 
 bool IsInternalURL(const GURL& url) {
   return url.SchemeIs(content::kChromeUIScheme) ||
+         url.SchemeIs(content::kChromeDevToolsScheme) ||
          url.SchemeIs(extensions::kExtensionScheme) ||
          url.SchemeIs(content::kViewSourceScheme);
 }
@@ -195,13 +192,11 @@ bool IsInternalURL(const GURL& url) {
 - (id)initWithParentWindow:(NSWindow*)parentWindow
     websiteSettingsUIBridge:(WebsiteSettingsUIBridge*)bridge
                 webContents:(content::WebContents*)webContents
-                        url:(const GURL&)url
-         isDevToolsDisabled:(BOOL)isDevToolsDisabled {
+                        url:(const GURL&)url {
   DCHECK(parentWindow);
 
   webContents_ = webContents;
   permissionsPresent_ = NO;
-  isDevToolsDisabled_ = isDevToolsDisabled;
   url_ = url;
 
   // Use an arbitrary height; it will be changed in performLayout.
@@ -267,7 +262,8 @@ bool IsInternalURL(const GURL& url) {
     text = IDS_PAGE_INFO_VIEW_SOURCE_PAGE;
     // view-source scheme uses the same icon as chrome:// pages.
     icon = IDR_PRODUCT_LOGO_16;
-  } else if (!url.SchemeIs(content::kChromeUIScheme)) {
+  } else if (!url.SchemeIs(content::kChromeUIScheme) &&
+             !url.SchemeIs(content::kChromeDevToolsScheme)) {
     NOTREACHED();
   }
 
@@ -342,14 +338,12 @@ bool IsInternalURL(const GURL& url) {
   resetDecisionsField_ = nil;
   resetDecisionsButton_ = nil;
 
-  NSString* securityDetailsButtonText =
-      l10n_util::GetNSString(IDS_WEBSITE_SETTINGS_DETAILS_LINK);
-  // Note: The security details button may be removed from the superview in
-  // -performLayout in order to hide it (depending on the connection).
-  securityDetailsButton_ = [self addLinkButtonWithText:securityDetailsButtonText
+  NSString* connectionHelpButtonText =
+      l10n_util::GetNSString(IDS_LEARN_MORE);
+  connectionHelpButton_ = [self addLinkButtonWithText:connectionHelpButtonText
                                                 toView:securitySectionView];
-  [securityDetailsButton_ setTarget:self];
-  [securityDetailsButton_ setAction:@selector(showSecurityDetails:)];
+  [connectionHelpButton_ setTarget:self];
+  [connectionHelpButton_ setAction:@selector(openConnectionHelp:)];
 
   return securitySectionView.get();
 }
@@ -407,21 +401,17 @@ bool IsInternalURL(const GURL& url) {
       false));
 }
 
-// Handler for the site settings button below the list of permissions.
 // TODO(lgarron): Move some of this to the presenter for separation of concerns
 // and platform unification. (https://crbug.com/571533)
-- (void)showSecurityDetails:(id)sender {
+- (void)openConnectionHelp:(id)sender {
   DCHECK(webContents_);
   DCHECK(presenter_);
   presenter_->RecordWebsiteSettingsAction(
-      WebsiteSettings::WEBSITE_SETTINGS_SECURITY_DETAILS_OPENED);
-
-  if (isDevToolsDisabled_) {
-    [self showCertificateInfo:sender];
-  } else {
-    DevToolsWindow::OpenDevToolsWindow(
-        webContents_, DevToolsToggleAction::ShowSecurityPanel());
-  }
+      WebsiteSettings::WEBSITE_SETTINGS_CONNECTION_HELP_OPENED);
+  webContents_->OpenURL(content::OpenURLParams(
+      GURL(chrome::kPageInfoHelpCenterURL), content::Referrer(),
+      WindowOpenDisposition::NEW_FOREGROUND_TAB, ui::PAGE_TRANSITION_LINK,
+      false));
 }
 
 // Handler for the link button to show certificate information.
@@ -509,18 +499,11 @@ bool IsInternalURL(const GURL& url) {
   yPos = [self setYPositionOfView:securityDetailsField_
                                to:yPos + kSecurityParagraphSpacing];
 
-  if (isDevToolsDisabled_ && !certificate_) {
-    // -removeFromSuperview is idempotent.
-    [securityDetailsButton_ removeFromSuperview];
-  } else {
-    // -addSubview is idempotent.
-    [securitySectionView_ addSubview:securityDetailsButton_];
-    [securityDetailsButton_
-        setFrameOrigin:NSMakePoint(
-                           kSectionHorizontalPadding - kLinkButtonXAdjustment,
-                           yPos)];
-    yPos = NSMaxY([securityDetailsButton_ frame]);
-  }
+  [connectionHelpButton_
+      setFrameOrigin:NSMakePoint(
+                         kSectionHorizontalPadding - kLinkButtonXAdjustment,
+                         yPos)];
+  yPos = NSMaxY([connectionHelpButton_ frame]);
 
   if (resetDecisionsButton_) {
     DCHECK(resetDecisionsField_);
@@ -1112,7 +1095,7 @@ bool IsInternalURL(const GURL& url) {
 }
 
 - (void)setPermissionInfo:(const PermissionInfoList&)permissionInfoList
-         andChosenObjects:(const ChosenObjectInfoList&)chosenObjectInfoList {
+         andChosenObjects:(ChosenObjectInfoList)chosenObjectInfoList {
   [permissionsView_ setSubviews:[NSArray array]];
   NSPoint controlOrigin = NSMakePoint(kSectionHorizontalPadding, 0);
 
@@ -1130,9 +1113,9 @@ bool IsInternalURL(const GURL& url) {
       controlOrigin.y = rowBottomRight.y;
     }
 
-    for (auto* object : chosenObjectInfoList) {
+    for (auto& object : chosenObjectInfoList) {
       controlOrigin.y += kPermissionsVerticalSpacing;
-      NSPoint rowBottomRight = [self addChosenObject:base::WrapUnique(object)
+      NSPoint rowBottomRight = [self addChosenObject:std::move(object)
                                               toView:permissionsView_
                                              atPoint:controlOrigin];
       controlOrigin.y = rowBottomRight.y;
@@ -1172,7 +1155,7 @@ void WebsiteSettingsUIBridge::Show(
     Profile* profile,
     content::WebContents* web_contents,
     const GURL& virtual_url,
-    const security_state::SecurityStateModel::SecurityInfo& security_info) {
+    const security_state::SecurityInfo& security_info) {
   if (chrome::ToolkitViewsWebUIDialogsEnabled()) {
     chrome::ShowWebsiteSettingsBubbleViewsAtPoint(
         gfx::ScreenPointFromNSPoint(AnchorPointForWindow(parent)), profile,
@@ -1189,9 +1172,6 @@ void WebsiteSettingsUIBridge::Show(
   // Create the bridge. This will be owned by the bubble controller.
   WebsiteSettingsUIBridge* bridge = new WebsiteSettingsUIBridge(web_contents);
 
-  bool is_devtools_disabled =
-      profile->GetPrefs()->GetBoolean(prefs::kDevToolsDisabled);
-
   // Create the bubble controller. It will dealloc itself when it closes,
   // resetting |g_is_popup_showing|.
   WebsiteSettingsBubbleController* bubble_controller =
@@ -1199,8 +1179,7 @@ void WebsiteSettingsUIBridge::Show(
              initWithParentWindow:parent
           websiteSettingsUIBridge:bridge
                       webContents:web_contents
-                              url:virtual_url
-               isDevToolsDisabled:is_devtools_disabled];
+                              url:virtual_url];
 
   if (!IsInternalURL(virtual_url)) {
     // Initialize the presenter, which holds the model and controls the UI.
@@ -1234,9 +1213,9 @@ void WebsiteSettingsUIBridge::SetCookieInfo(
 
 void WebsiteSettingsUIBridge::SetPermissionInfo(
     const PermissionInfoList& permission_info_list,
-    const ChosenObjectInfoList& chosen_object_info_list) {
+    ChosenObjectInfoList chosen_object_info_list) {
   [bubble_controller_ setPermissionInfo:permission_info_list
-                       andChosenObjects:chosen_object_info_list];
+                       andChosenObjects:std::move(chosen_object_info_list)];
 }
 
 void WebsiteSettingsUIBridge::SetSelectedTab(TabId tab_id) {
