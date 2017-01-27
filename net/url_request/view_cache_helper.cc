@@ -34,7 +34,8 @@ std::string FormatEntryInfo(disk_cache::Entry* entry,
   std::string key = entry->GetKey();
   GURL url = GURL(url_prefix + key);
   std::string row =
-      "<tr><td><a href=\"" + url.spec() + "\">" + EscapeForHTML(key) +
+  // chrome://cache font color
+      "<tr><td><a href=\"" + url.spec() + "\" style='color: #78AAFF;'>" + EscapeForHTML(key) +
       "</a></td></tr>";
   return row;
 }

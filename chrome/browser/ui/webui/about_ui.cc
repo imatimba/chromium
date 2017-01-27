@@ -405,18 +405,19 @@ std::string ChromeURLs() {
   std::string html;
   AppendHeader(&html, 0, "Chrome URLs");
   AppendBody(&html);
-  html += "<h2>List of Chrome URLs</h2>\n<ul>\n";
+  // Color changes for this html generator
+  html += "<h2 style='color: #d6d6d6;'>List of Chrome URLs</h2>\n<ul style='color: #d6d6d6;'>\n";
   std::vector<std::string> hosts(
       chrome::kChromeHostURLs,
       chrome::kChromeHostURLs + chrome::kNumberOfChromeHostURLs);
   std::sort(hosts.begin(), hosts.end());
   for (std::vector<std::string>::const_iterator i = hosts.begin();
        i != hosts.end(); ++i)
-    html += "<li><a href='chrome://" + *i + "/'>chrome://" + *i + "</a></li>\n";
-  html += "</ul>\n<h2>For Debug</h2>\n"
-      "<p>The following pages are for debugging purposes only. Because they "
+    html += "<li><a href='chrome://" + *i + "/' style='color: #78AAFF;'>chrome://" + *i + "</a></li>\n";
+  html += "</ul>\n<h2 style='color: #d6d6d6;'>For Debug</h2>\n"
+      "<p style='color: #d6d6d6;'>The following pages are for debugging purposes only. Because they "
       "crash or hang the renderer, they're not linked directly; you can type "
-      "them into the address bar if you need them.</p>\n<ul>";
+      "them into the address bar if you need them.</p>\n<ul style='color: #d6d6d6;'>";
   for (int i = 0; i < chrome::kNumberOfChromeDebugURLs; i++)
     html += "<li>" + std::string(chrome::kChromeDebugURLs[i]) + "</li>\n";
   html += "</ul>\n";
