@@ -8,7 +8,7 @@ body {
 }
 
 a {
-  color: blue;
+  color: #78AAFF;
   font-size: 103%;
 }
 
@@ -29,6 +29,7 @@ html[dir=rtl] #header {
 #header h1 {
   -webkit-padding-start: 51px;
   line-height: 48px;
+  color: #d6d6d6;
 }
 
 h1 {
@@ -50,11 +51,12 @@ h1 {
 
 div.content {
   margin-top: 5px;
+  color: #d6d6d6;
 }
 
 .section-header {
   -webkit-padding-start: 5px;
-  background: rgb(235, 239, 249);
+  background: rgb(78,87,100);
   border-top: 1px solid rgb(181, 199, 222);
   font-size: 99%;
   padding-bottom: 2px;
@@ -72,6 +74,7 @@ div.content {
 
 .section-header-title {
   font-weight: bold;
+  color: #d6d6d6;
 }
 
 .vbox-container {
@@ -144,8 +147,8 @@ body.show-tmi-mode .show-in-tmi-mode {
 }
 
 .plugin-disabled {
-  background-color: #f0f0f0;
-  color: #a0a0a0;
+  background-color: #4E5764;
+  color: #d6d6d6;
 }
 
 .plugin > tr > td {
@@ -173,6 +176,7 @@ body.show-tmi-mode .show-in-tmi-mode {
 
 .plugin-name {
   font-weight: bold;
+  color: #d6d6d6;
 }
 
 .no-plugins {
@@ -185,6 +189,7 @@ body.show-tmi-mode .show-in-tmi-mode {
 .plugin-details table {
   -webkit-border-horizontal-spacing: 0;
   -webkit-border-vertical-spacing: 0;
+  color: #d6d6d6;
 }
 
 .plugin-details {
@@ -213,7 +218,7 @@ body.show-tmi-mode .show-in-tmi-mode {
 
 /* Separate the header from the contents in each MIME Types table. */
 .plugin-details .mime-types .header td {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #d6d6d6;
   padding-bottom: 0.1em;
 }
 
